@@ -16,9 +16,9 @@ public class Client {
 		Map<String, TreeMap<Integer, List<String>>> femmeMap;
 		Map<String, TreeMap<Integer, List<String>>> hommeMap;  	
 		
-		LireFichier fichierFemme = new LireFichier("/home/beatwipps/workspace/MariageStable/src/main/AffectationFemme.txt");
+		LireFichier fichierFemme = new LireFichier("/home/beatwipps/git/MariageStable/src/main/AffectationFemme.txt");
 		femmeMap = fichierFemme.getMap();
-		LireFichier fichierHomme = new LireFichier("/home/beatwipps/workspace/MariageStable/src/main/AffectationHomme.txt");
+		LireFichier fichierHomme = new LireFichier("/home/beatwipps/git/MariageStable/src/main/AffectationHomme.txt");
 		hommeMap = fichierHomme.getMap();
 
 		StableStrategie E = new ExtendedStable(hommeMap, femmeMap);
