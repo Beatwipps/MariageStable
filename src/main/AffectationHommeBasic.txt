@@ -7,23 +7,29 @@ Jay
 
 Dave
 1 Lea
-2 Ciri Lili
-3 Amy
-4 Sira
+2 Ciri
+3 Lili
+4 Amy
+5 Sira
 
 Aron
 1 Sira
-2 Amy Lili Ciri
+2 Amy
 3 Lea
+4 Lili
+5 Ciri
 
 Sky
-1 Lili Amy
+1 Lili
 2 Sira
-3 Lea Ciri
+3 Ciri
+4 Amy
+5 Lea
 
 Raze
 1 Lea
 2 Lili
-3 Sira Amy
+3 Sira
 4 Ciri
+5 Amy
 /

@@ -1,29 +1,35 @@
 Lea
 1 Raze
-2 Dave Sky
+2 Dave
 3 Jay
 4 Aron
+5 Sky
 
 Amy
 1 Aron
 2 Dave
-3 Jay Sky Raze
+3 Jay
+4 Sky
+5 Raze
 
 Ciri
-1 Jay Aron
+1 Jay
 2 Sky
 3 Raze
 4 Dave
+5 Aron
 
 Lili
 1 Raze
 2 Jay
-3 Sky Aron 
-4 Dave
+3 Aron 
+4 Sky
+5 Dave
 
 Sira
 1 Jay
-2 Sky Dave
-3 Aron
-4 Raze
+2 Sky
+3 Dave
+4 Aron
+5 Raze
 /
