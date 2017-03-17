@@ -5,11 +5,9 @@ package main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 /**
  * @author beatwipps
@@ -18,222 +16,115 @@ import java.util.TreeMap;
 public class BasicStable implements StableStrategie{
 	
 	/* 
-	 * Renvoie une Map de couple (Homme, Femme)
+	 * Les A proposent aux B 
+	 * 
+	 * 
+	 * Renvoie une map de couple (B, A)
 	 */
 	@Override
-	public Map<String, String> trouveUneSolution(Map<String, ArrayList<List<String>>> preferenceDesHommes,
-			Map<String, ArrayList<List<String>>> preferenceDesFemmes, List<String> hommes, List<String> femmes) {
+	public Map<String, String> trouveUnCouplage(Map<String, ArrayList<List<String>>> preferenceDes_A,
+			Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> listeDes_B) {
 		
-		Map<String, List<String>> tmpPreferenceDesHommes = new HashMap<String, List<String>>();
-		tmpPreferenceDesHommes = convert(preferenceDesHommes);
+		Map<String, List<String>> tmpPreferenceDes_A = new HashMap<String, List<String>>();
+		tmpPreferenceDes_A = convert(preferenceDes_A);
 		
-		Map<String, ArrayList<List<String>>> tmpPreferenceDesFemmes = new TreeMap<>(preferenceDesFemmes);
-		List<String> tmpHommes = new ArrayList<>(hommes);
-		List<String> tmpFemmes = new ArrayList<>(femmes);
+		List<String> tmpListeDes_A = new ArrayList<>(listeDes_A);
+		List<String> tmpListeDes_B = new ArrayList<>(listeDes_B);
 		Map<String, String> coupleEngage = new HashMap<String, String>();
-		Map<String,String> aAjouterDansCoupleEngage = new HashMap<String,String>();
 		
-		
-		while(!tmpHommes.isEmpty()){
-			String cetHomme = tmpHommes.remove(0);  
-			String femmePrefereDeCetHomme = tmpPreferenceDesHommes.get(cetHomme).get(0);
-			// Suppresion de la femme prefere de cet homme dans sa liste de preference
-			tmpPreferenceDesHommes.get(cetHomme).remove(0);
-			if(tmpFemmes.contains(femmePrefereDeCetHomme)){
-				coupleEngage.put(cetHomme, femmePrefereDeCetHomme);
-				tmpFemmes.remove(femmePrefereDeCetHomme);
+		while(!tmpListeDes_A.isEmpty()){
+			String ce_A = tmpListeDes_A.remove(0);  
+			String B_PrefereDe_A = tmpPreferenceDes_A.get(ce_A).remove(0);	
+			// Si le prefere de A est libre
+			if(tmpListeDes_B.contains(B_PrefereDe_A)){
+				coupleEngage.put(B_PrefereDe_A, ce_A);
+				tmpListeDes_B.remove(B_PrefereDe_A);
 			}
 			else{
-				choisirPrefereDeLaFemmeEntreDeuxHommes(tmpPreferenceDesFemmes, tmpHommes, coupleEngage, cetHomme,
-						femmePrefereDeCetHomme, aAjouterDansCoupleEngage);
+				String autre_A = coupleEngage.get(B_PrefereDe_A);
+				if(preferenceDes_B.get(B_PrefereDe_A).indexOf(ce_A) < 
+						preferenceDes_B.get(B_PrefereDe_A).indexOf(autre_A)){
+					coupleEngage.put(B_PrefereDe_A, ce_A);
+					coupleEngage.remove(autre_A);
+					tmpListeDes_A.add(autre_A);
+				}
+				else{
+					tmpListeDes_A.add(ce_A);
+				}
 			}
-			ajouterCouple(coupleEngage, aAjouterDansCoupleEngage);
 		}
-		
 		return coupleEngage;
 	}
 
+	/*
+	 * Verifie le couplage, 
+	 * Renvoie true si le couplage est stable, false sinon
+	 * 
+	 */
+	
 	@Override
-	public boolean verifieLaSolution(Map<String, ArrayList<List<String>>> preferenceDesHommes,
-			Map<String, ArrayList<List<String>>> preferenceDesFemmes, List<String> hommes, List<String> femmes,
+	public boolean verifieLeCouplage(Map<String, ArrayList<List<String>>> preferenceDes_A,
+			Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> listeDes_B,
 			Map<String, String> coupleEngage) {
 		
-		Map<String, List<String>> tmpPreferenceDesHommes = new HashMap<String, List<String>>();
-		tmpPreferenceDesHommes = convert(preferenceDesHommes);
-		Map<String, List<String>> tmpPreferenceDesFemmes = new HashMap<String, List<String>>();
-		tmpPreferenceDesFemmes = convert(preferenceDesFemmes);
-		
-		if(!coupleEngage.keySet().containsAll(hommes)){
-			return false;
-		}
-
-		if(!coupleEngage.values().containsAll(femmes)){
-			return false;
-		}
-		Map<String, String> coupleEngageInverse = new TreeMap<String, String>();
+		Map<String, List<String>> tmpPreferenceDes_A = new HashMap<String, List<String>>();
+		tmpPreferenceDes_A = convert(preferenceDes_A);
+		Map<String, List<String>> tmpPreferenceDes_B = new HashMap<String, List<String>>();
+		tmpPreferenceDes_B = convert(preferenceDes_B);
+		Map<String, String> coupleEngageInverse = new HashMap<String, String>();
 		for(Map.Entry<String, String> couple: coupleEngage.entrySet()){
 			coupleEngageInverse.put(couple.getValue(), couple.getKey());
 		}
-
-		for(Map.Entry<String, String> couple: coupleEngage.entrySet()){
-			
-			List<String> preferenceDeLaFemmeDuCouple = tmpPreferenceDesFemmes.get(couple.getValue());
-			List<String> topPreferenceDeCetteFemme = new ArrayList<String>();
-			topPreferenceDeCetteFemme.addAll(preferenceDeLaFemmeDuCouple.subList(0, preferenceDeLaFemmeDuCouple.indexOf(couple.getKey())));
-			List<String> preferenceDeLHommeDuCouple = tmpPreferenceDesHommes.get(couple.getKey());
-			List<String> topPreferenceDeCetHomme = new ArrayList<String>();
-			topPreferenceDeCetHomme.addAll(preferenceDeLHommeDuCouple.subList(0, preferenceDeLHommeDuCouple.indexOf(couple.getValue())));
-
-			for(String homme : topPreferenceDeCetteFemme){
-				String laMariee = coupleEngage.get(homme);
-				List<String> preferenceDeCetHomme = tmpPreferenceDesHommes.get(homme);
-				if(preferenceDeCetHomme.indexOf(laMariee) >
-				preferenceDeCetHomme.indexOf(couple.getKey())){
-					System.out.printf("%s Aime %s plus que %s et %s"
-							+ " aime %s plus que son partenaire actuel\n",
-							couple.getValue(), homme, couple.getKey(),
-							homme, couple.getValue());
-					return false;
-				}
-			}
-
-			for(String femme : topPreferenceDeCetHomme){
-				String leMarie = coupleEngageInverse.get(femme);
-				List<String> preferenceDeCetteFemme = tmpPreferenceDesFemmes.get(femme);
-				if(preferenceDeCetteFemme.indexOf(leMarie) >
-				preferenceDeCetteFemme.indexOf(couple.getKey())){
-					System.out.printf("%s aime %s plus que %s et %s"
-							+ " aime %s plus que son partenaire actuel\n",
-							couple.getKey(), femme, couple.getValue(),
-							femme, couple.getKey());
-					return false;
-				}
-			}
-		}
-		return true;
-
-	}
-	
-	/**
-	 * @param preferenceDesFemmes
-	 * @param hommesLibre
-	 * @param coupleEngage
-	 * @param cetHomme
-	 * @param femmePrefereDeCetHomme
-	 * @param aAjouterDansCoupleEngage
-	 */
-	private void choisirPrefereDeLaFemmeEntreDeuxHommes(Map<String, ArrayList<List<String>>> preferenceDesFemmes,
-			List<String> hommesLibre, Map<String, String> coupleEngage, String cetHomme, String femmePrefereDeCetHomme,
-			Map<String, String> aAjouterDansCoupleEngage) {
 		
-		Iterator<Entry<String, String>> iter = coupleEngage.entrySet().iterator();
-		Entry<String, String> couple;
-		while (iter.hasNext()){
-			
-			couple = iter.next();
-			String autreHomme = couple.getKey();
-			String laFemmeAdultere = couple.getValue();
-			int placeDeHommePourCetteFemme = -1;
-			int cleDeAutreHommeDansPreferenceDeLaFemme = -1;
-			boolean cle1Trouve = false;
-			boolean cle2Trouve = false;
-			if(!autreHomme.contentEquals(cetHomme) && laFemmeAdultere.contentEquals(femmePrefereDeCetHomme)){
-				for(List<String> pref : preferenceDesFemmes.get(laFemmeAdultere)) {
-					
-					if (pref.contains(cetHomme)){
-						placeDeHommePourCetteFemme = preferenceDesFemmes.get(laFemmeAdultere).indexOf(pref);
-						cle1Trouve = true;
+		
+		if(!coupleEngage.keySet().containsAll(listeDes_B)){
+			return false;
+		}
+
+		if(!coupleEngage.values().containsAll(listeDes_A)){
+			return false;
+		}
+		
+		for(Entry<String, String> couple : coupleEngage.entrySet()){
+			String ce_A = couple.getValue();
+			for(String b : tmpPreferenceDes_A.get(ce_A)){
+				if(tmpPreferenceDes_A.get(ce_A).indexOf(b) < tmpPreferenceDes_A.get(ce_A).indexOf(couple.getKey())){
+					System.out.printf("%s prefere %s à %s\n", ce_A, b, couple.getKey());
+					String a = coupleEngage.get(b);
+					if(tmpPreferenceDes_B.get(b).indexOf(ce_A) < tmpPreferenceDes_B.get(b).indexOf(a)){
+						System.out.printf("%s prefere %s à %s\n", b, ce_A, a);
+						System.out.println("Le couplage n'est pas stable");
+						return false;
+					}else{
+						System.out.printf("Par contre %s prefere %s, plutôt que %s", b, coupleEngage.get(b), ce_A);
+						System.out.println();
 					}
-					if (pref.contains(autreHomme)){
-						cleDeAutreHommeDansPreferenceDeLaFemme = preferenceDesFemmes.get(laFemmeAdultere).indexOf(pref);
-						cle2Trouve = true;
-					}
-					// permet de ne pas continuer a bouclé sur l'on a trouvé les 2 clés
-					if(cle1Trouve && cle2Trouve)
-						break;
-					
-				} 
-				if(cleDeAutreHommeDansPreferenceDeLaFemme > placeDeHommePourCetteFemme){
-//				La femme prefere son nouveau copain
-					aAjouterDansCoupleEngage.put(cetHomme, laFemmeAdultere);
-					iter.remove();
-					hommesLibre.add(autreHomme);
-				}
-				else{
-//					La femme prefere son ancien copain
-					coupleEngage.remove(cetHomme, laFemmeAdultere);
-					hommesLibre.add(cetHomme);
 				}
 			}
 		}
+		System.out.println("\nLe couplage est stable");
+		return true;
 	}
 
-	/**
-	 * @param coupleEngage
-	 * @param aAjouterDansCoupleEngage
-	 */
-	private void ajouterCouple(Map<String, String> coupleEngage, Map<String, String> aAjouterDansCoupleEngage) {
-		for(Entry<String,String> coupleaAjoute : aAjouterDansCoupleEngage.entrySet()){
-			String cle = coupleaAjoute.getKey();
-			String val = coupleaAjoute.getValue();
-			coupleEngage.put(cle, val);
-		}
-	}
 
+	
 	@Override
-	public void affiche(Map<String, ArrayList<List<String>>> preferenceDesHommes,
-			Map<String, ArrayList<List<String>>> preferenceDesFemmes, List<String> hommes, List<String> femmes) {
-		 Map<String, String> matches = trouveUneSolution(preferenceDesHommes, preferenceDesFemmes, hommes, femmes);
+	public void afficheLeCouplage(Map<String, ArrayList<List<String>>> preferenceDes_A,
+			Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> listeDes_B) {
+		 Map<String, String> matches = trouveUnCouplage(preferenceDes_A, preferenceDes_B, listeDes_A, listeDes_B);
 		 
 	        for(Map.Entry<String, String> couple:matches.entrySet()){
-	            System.out.println(
-	                    couple.getKey() + " est engagé à " + couple.getValue());
+	            System.out.println(couple.getValue() + " est engagé à " + couple.getKey());
 	        }
-	        if(verifieLaSolution(preferenceDesHommes, preferenceDesFemmes, hommes, femmes, matches)){
-	        	
-	        	System.out.println("Les mariages sont stables");
-	        }else{
-	            System.out.println("Les mariages sont unstables");
-	        }
-	        
-	        String tmp = matches.get(hommes.get(0));
-	        matches.put(hommes.get(0), matches.get(hommes.get(1)));
-	        matches.put(hommes.get(1), tmp);
-	        System.out.println(
-	                hommes.get(0) +" et " + hommes.get(1) + " ont echangés de partenaires");
-	        if(verifieLaSolution(preferenceDesHommes, preferenceDesFemmes, hommes, femmes, matches)){
-	            System.out.println("Les mariages sont stables");
-	        }else{
-	            System.out.println("Les mariages sont unstables");
-	        }
-//		System.out.println("------- Preferences des Hommes --------");
-//		for (Entry<String, ArrayList<List<String>>> entry : preferenceDesHommes.entrySet()) {
-//			String key = entry.getKey();
-//			System.out.println("preference de : " +key);
-//			ArrayList<List<String>> myArray = entry.getValue();
-//
-//
-//			for (int i = 0; i < myArray.size(); i++){
-//				System.out.println( myArray.indexOf(myArray.get(i)) + " => " + myArray.get(i).get(0));	              
-//			}
-//			System.out.println();
-//		}
-//
-//		System.out.println("------- Preferences des Femmes --------");
-//		for (Entry<String, ArrayList<List<String>>> entry : preferenceDesFemmes.entrySet()) {
-//			String key = entry.getKey();
-//			System.out.println(key);
-//			ArrayList<List<String>> myArray = entry.getValue();
-//
-//
-//			for (int i = 0; i < myArray.size(); i++){
-//				System.out.println( myArray.indexOf(myArray.get(i)) + " => " + myArray.get(i).get(0));	              
-//			}
-//			System.out.println();
-//			
-//		}
+	        System.out.println();
 	}
 
+	
+	/*
+	* Convertie une map de type Map<String, ArrayList<List<String>>> vers une map de type
+	*	Map<String, List<String>
+	*
+	*/
 	public Map<String, List<String>> convert(Map<String, ArrayList<List<String>>> map){
 		
 		Map<String, List<String>> tmp = new HashMap<String, List<String>>();

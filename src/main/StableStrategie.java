@@ -4,17 +4,16 @@ package main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public interface StableStrategie {
 
-		public Map<String, String> trouveUneSolution(Map<String, ArrayList<List<String>>> preferenceDesHommes, 
-				Map<String, ArrayList<List<String>>> preferenceDesFemmes, List<String> hommes, List<String> femmes);
+		public Map<String, String> trouveUnCouplage(Map<String, ArrayList<List<String>>> preferenceDes_A, 
+				Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> listeDes_B);
 		
-		public boolean verifieLaSolution(Map<String, ArrayList<List<String>>> preferencesDesHommes, 
-				Map<String, ArrayList<List<String>>> preferenceDesFemmes, List<String> hommes, List<String> femmes,
+		public boolean verifieLeCouplage(Map<String, ArrayList<List<String>>> preferencesDes_A, 
+				Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> listeDes_B,
 				Map<String, String> coupleEngage);
 		
-		public void affiche(Map<String, ArrayList<List<String>>> preferenceDesHommes,
-				Map<String, ArrayList<List<String>>> preferenceDesFemmes, List<String> hommes, List<String> femmes );
+		public void afficheLeCouplage(Map<String, ArrayList<List<String>>> preferenceDes_A,
+				Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> ListeDes_B);
 }
