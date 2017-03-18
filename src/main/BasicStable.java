@@ -4,6 +4,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +28,9 @@ public class BasicStable implements StableStrategie{
 		
 		Map<String, List<String>> tmpPreferenceDes_A = new HashMap<String, List<String>>();
 		tmpPreferenceDes_A = convert(preferenceDes_A);
-		
-		List<String> tmpListeDes_A = new ArrayList<>(listeDes_A);
-		List<String> tmpListeDes_B = new ArrayList<>(listeDes_B);
+		System.out.println("Conversion : "+ tmpPreferenceDes_A);
+		List<String> tmpListeDes_A = new ArrayList<String>(listeDes_A);
+		List<String> tmpListeDes_B = new ArrayList<String>(listeDes_B);
 		Map<String, String> coupleEngage = new HashMap<String, String>();
 		
 		while(!tmpListeDes_A.isEmpty()){
@@ -139,7 +140,6 @@ public class BasicStable implements StableStrategie{
 			tmp.put(cle, tmplist);
 		}
 		return tmp;
-		
 	}
 	
 	

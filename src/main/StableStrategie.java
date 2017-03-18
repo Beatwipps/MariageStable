@@ -15,5 +15,10 @@ public interface StableStrategie {
 				Map<String, String> coupleEngage);
 		
 		public void afficheLeCouplage(Map<String, ArrayList<List<String>>> preferenceDes_A,
-				Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> ListeDes_B);
+				Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> listeDes_B);
+		
+		public Map<String, List<String>> convert(Map<String, ArrayList<List<String>>> map);
+		
 }
+
+
