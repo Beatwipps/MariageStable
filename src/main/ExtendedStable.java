@@ -22,12 +22,13 @@ public class ExtendedStable implements StableStrategie {
 		
 		Map<String, String> coupleEngage = new HashMap<String, String>();
 		Map<String, List<String>> tmpPreferenceDes_A = new HashMap<String, List<String>>();
-		tmpPreferenceDes_A = convert(preferenceDes_A);
 		Map<String, List<String>> tmpPreferenceDes_B = new HashMap<String, List<String>>();
-		tmpPreferenceDes_B = convert(preferenceDes_B);
-		System.out.println("Conversion : "+ tmpPreferenceDes_A);
 		List<String> tmpListeDes_A = new ArrayList<String>(listeDes_A);
 		List<String> tmpListeDes_B = new ArrayList<String>(listeDes_B);
+		
+		tmpPreferenceDes_A = convert(preferenceDes_A);	
+		tmpPreferenceDes_B = convert(preferenceDes_B);
+//		System.out.println("Conversion : "+ tmpPreferenceDes_A);
 		
 		while(!tmpListeDes_A.isEmpty()){
 			String ce_A = tmpListeDes_A.remove(0);  
@@ -49,19 +50,14 @@ public class ExtendedStable implements StableStrategie {
 						tmpPreferenceDes_B.get(B_PrefereDe_A).size()).iterator();
 	
 				while (iter.hasNext()) {
-				    String str = iter.next();
+				    	iter.next();
 				        iter.remove();
 				}
 			}
-//			for(String s : tmpPreferenceDes_B.get(B_PrefereDe_A).subList(
-//					tmpPreferenceDes_B.get(B_PrefereDe_A).indexOf(ce_A), 
-//					tmpPreferenceDes_B.get(B_PrefereDe_A).size()-1)){
-//				tmpPreferenceDes_B.get(B_PrefereDe_A).remove(s);
-//			}
 		}
 		System.out.println(coupleEngage);
-		System.out.println("Liste des Femmes: "+tmpPreferenceDes_B);
-		System.out.println("Liste des Hommes: "+tmpPreferenceDes_A);
+//		System.out.println("Liste des Femmes: "+tmpPreferenceDes_B);
+//		System.out.println("Liste des Hommes: "+tmpPreferenceDes_A);
 		return coupleEngage;
 	}
 
@@ -73,8 +69,10 @@ public class ExtendedStable implements StableStrategie {
 	public boolean verifieLeCouplage(Map<String, ArrayList<List<String>>> preferencesDes_A,
 			Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> listeDes_B,
 			Map<String, String> coupleEngage) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		StableStrategie basic = new BasicStable();
+		return basic.verifieLeCouplage(preferencesDes_A, preferenceDes_B, listeDes_A, listeDes_B, coupleEngage);
+		
 	}
 
 	@Override
@@ -121,9 +119,9 @@ public class ExtendedStable implements StableStrategie {
 			List<String> tmplist = new ArrayList<String>();
 			for(List<String> list : entrymap.getValue()){
 				if(list.size()>1){
-					Collections.shuffle(list);
-					for(int i=0; i<list.size(); i++)
-						tmplist.add(list.get(i));
+					//Collections.shuffle(list);
+					for(String s : list)
+						tmplist.add(s);
 				}else{
 					tmplist.add(list.get(0));
 				}

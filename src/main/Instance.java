@@ -29,7 +29,7 @@ public class Instance {
 
 	
 	public void executeStableStrategie(){
-		strat.afficheLeCouplage(mapA, mapB, A, B);
+	//	strat.afficheLeCouplage(mapA, mapB, A, B);
 		strat.verifieLeCouplage(mapA, mapB, A, B, strat.trouveUnCouplage(mapA, mapB, A, B));
 		
 		

@@ -1,9 +1,9 @@
 Jay
-1 Sira
-2 Lea
+1 Lea
+2 Amy
 3 Lili
-4 Ciri
-5 Amy
+4 Sira
+5 Ciri
 
 Dave
 1 Lea
