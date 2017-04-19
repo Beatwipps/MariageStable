@@ -27,9 +27,9 @@ Sky
 5 Lea
 
 Raze
-1 Lea
+1 Ciri
 2 Lili
 3 Sira
-4 Ciri
+4 Lea
 5 Amy
 /

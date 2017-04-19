@@ -4,7 +4,6 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ import java.util.Map.Entry;
  * @author beatwipps
  *
  */
-public class BasicStable implements StableStrategie{
+public class BasicStable implements StableStrategie, Convertable{
 	
 	/* 
 	 * Les A proposent aux B 
@@ -28,7 +27,9 @@ public class BasicStable implements StableStrategie{
 		
 		Map<String, List<String>> tmpPreferenceDes_A = new HashMap<String, List<String>>();
 		tmpPreferenceDes_A = convert(preferenceDes_A);
-		System.out.println("Conversion : "+ tmpPreferenceDes_A);
+		Map<String, List<String>> tmpPreferenceDes_B = new HashMap<String, List<String>>();
+		tmpPreferenceDes_B = convert(preferenceDes_B);
+		System.out.println("Conversion : "+ tmpPreferenceDes_B);
 		List<String> tmpListeDes_A = new ArrayList<String>(listeDes_A);
 		List<String> tmpListeDes_B = new ArrayList<String>(listeDes_B);
 		Map<String, String> coupleEngage = new HashMap<String, String>();
@@ -43,10 +44,9 @@ public class BasicStable implements StableStrategie{
 			}
 			else{
 				String autre_A = coupleEngage.get(B_PrefereDe_A);
-				if(preferenceDes_B.get(B_PrefereDe_A).indexOf(ce_A) < 
-						preferenceDes_B.get(B_PrefereDe_A).indexOf(autre_A)){
+				if(tmpPreferenceDes_B.get(B_PrefereDe_A).indexOf(ce_A) < 
+						tmpPreferenceDes_B.get(B_PrefereDe_A).indexOf(autre_A)){
 					coupleEngage.put(B_PrefereDe_A, ce_A);
-					coupleEngage.remove(autre_A);
 					tmpListeDes_A.add(autre_A);
 				}
 				else{

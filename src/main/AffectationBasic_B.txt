@@ -1,8 +1,8 @@
 Lea
-1 Sky
+1 Aron
 2 Dave
 3 Jay
-4 Aron
+4 Sky
 5 Raze
 
 Amy
@@ -14,8 +14,8 @@ Amy
 
 Ciri
 1 Jay
-2 Sky
-3 Raze
+2 Raze
+3 Sky
 4 Dave
 5 Aron
 

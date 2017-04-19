@@ -1,16 +1,13 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
-public class ExtendedStable implements StableStrategie {
+public class ExtendedStable implements StableStrategie, Convertable {
 
 
 	
@@ -44,11 +41,11 @@ public class ExtendedStable implements StableStrategie {
 				coupleEngage.put(B_PrefereDe_A, ce_A);
 				
 			}
-				if(tmpPreferenceDes_B.get(B_PrefereDe_A).indexOf(ce_A)!= -1){
+			if(tmpPreferenceDes_B.get(B_PrefereDe_A).indexOf(ce_A)!= -1){
 				Iterator<String> iter = tmpPreferenceDes_B.get(B_PrefereDe_A).subList(
 						tmpPreferenceDes_B.get(B_PrefereDe_A).indexOf(ce_A), 
-						tmpPreferenceDes_B.get(B_PrefereDe_A).size()).iterator();
-	
+						tmpPreferenceDes_B.get(B_PrefereDe_A).size())
+						.iterator();
 				while (iter.hasNext()) {
 				    	iter.next();
 				        iter.remove();
@@ -56,8 +53,6 @@ public class ExtendedStable implements StableStrategie {
 			}
 		}
 		System.out.println(coupleEngage);
-//		System.out.println("Liste des Femmes: "+tmpPreferenceDes_B);
-//		System.out.println("Liste des Hommes: "+tmpPreferenceDes_A);
 		return coupleEngage;
 	}
 

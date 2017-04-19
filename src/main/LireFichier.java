@@ -7,21 +7,25 @@ import java.util.*;
 
 public class LireFichier {
 	
+	protected StableStrategie strat;
 	protected String source;
 	private Map<String, ArrayList<List<String>>> mapDePreferences;
 	private List<String> listeDePersonnes;
 	
 	
-	public LireFichier(String source) {
+	public LireFichier(String source, StableStrategie strat) {
 		this.source = source;
-		setMap(lectureEtAffacetationDesPreferences(mapDePreferences));
+		this.strat = strat;
+		setMap(lectureEtAffacetationDesPreferences(mapDePreferences, strat));
 		setList(lectureEtAffectationDesPersonnes(listeDePersonnes));
 	}
 
 
-	private Map<String, ArrayList<List<String>>> lectureEtAffacetationDesPreferences(Map<String, ArrayList<List<String>>> map) { 
+	private Map<String, ArrayList<List<String>>> lectureEtAffacetationDesPreferences(Map<String, ArrayList<List<String>>> map, StableStrategie strat) { 
 
 		map = new HashMap<String, ArrayList<List<String>>>();
+		boolean indifference = false;
+
 		try {
 			String ligne = null;
 			String cle = null;
@@ -36,6 +40,8 @@ public class LireFichier {
 						List<String> listetmp = new ArrayList<String>();
 						for(String str : ligne.split(" "))
 							listetmp.add(str);
+						if(listetmp.size()>2)
+							indifference = true;
 						listetmp.remove(0);
 						arrayTmp.add(listetmp);
 						ligne = fichier.nextLine();
@@ -49,6 +55,11 @@ public class LireFichier {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if(indifference == true && strat instanceof BasicStable){
+			System.out.printf("Le fichier %s contient des indifferences et la strategie utilisé est Basique. ERREUR", source);
+			return null;
+		}
+			
 		return map;    
 	}
 	
