@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
-
+import java.util.Stack;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -92,13 +92,78 @@ public class StrongStable implements StableStrategie{
 
 		}
 
-		System.out.println(coupleEngage);
-		System.out.println(coupleEngageInverse);
-		System.out.println(tmpCouplage);
-		System.out.println(uLibre);
-		System.out.println(vLibre);
-
-		BFS(tmpCouplage, coupleEngageInverse, coupleEngage, listeDes_A, uLibre, vLibre);
+//		System.out.println(coupleEngage);
+//		System.out.println(coupleEngageInverse);
+//		System.out.println(tmpCouplage);
+//		System.out.println(uLibre);
+//		System.out.println(vLibre);
+		
+		Multimap<String,String> testa = HashMultimap.create(); // Map (u -> v)	
+		Multimap<String,String> testabis = HashMultimap.create();
+		Map<String, String> testb = new HashMap<String, String>();
+		List<String> listeDes_Abs = new ArrayList<String>();
+		List<String> libreu = new ArrayList<String>();
+		List<String> librev = new ArrayList<String>();
+		
+		libreu.add("L");
+		libreu.add("R");
+		
+		librev.add("4");
+		librev.add("5");
+		
+		listeDes_Abs.add("B");
+		listeDes_Abs.add("E");
+		listeDes_Abs.add("J");
+		listeDes_Abs.add("L");
+		listeDes_Abs.add("T");
+		listeDes_Abs.add("A");
+		listeDes_Abs.add("R");
+		
+		testa.put("B", "1");
+		testa.put("B", "4");
+		testa.put("E", "3");
+		testa.put("E", "6");
+		testa.put("E", "7");
+		testa.put("J", "2");
+		testa.put("J", "4");
+		testa.put("J", "5");
+		testa.put("L", "2");
+		testa.put("L", "7");
+		testa.put("T", "5");
+		testa.put("T", "6");
+		testa.put("T", "7");
+		testa.put("A", "3");
+		testa.put("A", "6");
+		testa.put("R", "6");
+		testa.put("R", "7");
+		
+		testb.put("B", "1");
+		testb.put("E", "7");
+		testb.put("J", "2");
+		testb.put("T", "6");
+		testb.put("A", "3");
+		
+		testabis.put("1", "B");
+		testabis.put("2", "J");
+		testabis.put("2", "L");
+		testabis.put("3", "E");
+		testabis.put("3", "A");
+		testabis.put("4", "B");
+		testabis.put("4", "J");
+		testabis.put("5", "J");
+		testabis.put("5", "T");
+		testabis.put("6", "E");
+		testabis.put("6", "T");
+		testabis.put("6", "A");
+		testabis.put("6", "R");
+		testabis.put("7", "E");
+		testabis.put("7", "L");
+		testabis.put("7", "T");
+		testabis.put("7", "R");
+		
+		
+		
+		BFS(testb, testa, testabis, listeDes_Abs, libreu, librev);
 		//		}
 		//		while(tmpListeDes_A1.isEmpty() || (tmpListeDes_A1.isEmpty() && tmpListeDes_B1.isEmpty()));
 		//		
@@ -111,27 +176,45 @@ public class StrongStable implements StableStrategie{
 		Queue<String> queue = new ArrayDeque<>();
 		//	    Queue<String> arbre = new ArrayDeque<>();
 		HashSet<String> seen = new HashSet<>();
-
+		List<String> dfs = new ArrayList<String>();
+		Multimap<String,String> coupleEngageInverseTMP = HashMultimap.create(); // la map u-> v pour le DFS
+		Map<String, String> tmpCouplageTMP = new HashMap<String, String>(); // Couplage temporaire, map v -> u pour le DFS
 		for(String s : start)//		Ajouter tout les noeuds u libre dans la file
 			queue.add(s); 
 		//	    arbre.add(start);
 		while(0 != queue.size()){
 			String vertex = queue.poll();
 			if(listeDes_A.contains(vertex)){ // Si vertex appartient à u (aux hommes)
+				
 				for(String ls : mapA.get(vertex)){
-					if(!couplage.containsKey(vertex))
-						queue.add(ls); 
+					if(!couplage.containsKey(vertex)){
+						queue.add(ls);
+						coupleEngageInverseTMP.put(vertex, ls);
+					}
+					else{
+						if(!couplage.get(vertex).equals(ls) && !seen.contains(ls)){
+							queue.add(ls);
+							coupleEngageInverseTMP.put(vertex, ls);
+						}
+					}
 				}
 				seen.add(vertex);
 			}
 			else{ //	        	 Si vertex appartient à v (aux femmes)
-				if(end.contains(vertex)){ // Si le vertex courant est dans la liste des v libres on s'arrete et on commence le dfs
-					// DFS
+				if(end.contains(vertex)){
+					System.out.println("Dans le end " +coupleEngageInverseTMP);
+					System.out.println("Dans le end " +tmpCouplageTMP);
+					for(String s : start)// Si le vertex courant est dans la liste des v libres on s'arrete et on commence le dfs
+						dfs = DFS(tmpCouplageTMP, coupleEngageInverseTMP, dfs, s, vertex);
+					System.out.println("DFS " +dfs);
 				}
 				for(String ls : mapB.get(vertex)){
 					if(couplage.containsKey(ls))
-						if(couplage.get(ls).contains(vertex))
+						if(couplage.get(ls).contains(vertex) && !seen.contains(vertex)){
 							queue.add(ls); // Ajouter tout les voisins de vertex à la file
+							tmpCouplageTMP.put(vertex, ls);
+						}
+							
 				}
 				seen.add(vertex);
 			}	
@@ -139,9 +222,36 @@ public class StrongStable implements StableStrategie{
 		//	    }
 		System.out.println("Seen "+ seen);
 		System.out.println("Queue " + queue);
-
+		System.out.println(coupleEngageInverseTMP);
+		System.out.println(tmpCouplageTMP);
 	}
 
+	
+	public static List<String> DFS(Map<String, String> mapB, Multimap<String,String> mapA, List<String> seen,  String start, String end) {
+			
+		
+		seen.add(start);
+		if(start.contentEquals(end)){
+			System.out.println("Trouvé");
+			System.out.println(seen);
+			//return seen;
+		}
+		else{
+			if(mapA.containsKey(start)){
+				for(String s : mapA.get(start)){
+					DFS(mapB, mapA, seen, s, end);
+				}
+			}
+			if(mapB.containsKey(start)){
+					DFS(mapB, mapA, seen, mapB.get(start), end);
+				
+			}
+		}
+		return seen;		
+			
+		}
+		
+	
 	
 	public Multimap<String,String> invKey_Values (Multimap<String,String> map){
 		
