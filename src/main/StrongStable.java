@@ -217,6 +217,7 @@ public class StrongStable implements StableStrategie{
 							
 				}
 				seen.add(vertex);
+				
 			}	
 		}
 		//	    }
