@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,16 +31,14 @@ public class ExtendedStable implements StableStrategie, Convertable {
 		while(!tmpListeDes_A.isEmpty()){
 			String ce_A = tmpListeDes_A.remove(0);  
 			String B_PrefereDe_A = tmpPreferenceDes_A.get(ce_A).remove(0);	
-			//coupleEngage.put(B_PrefereDe_A, ce_A);
+			
 			if(tmpListeDes_B.contains(B_PrefereDe_A)){
-				//String autre_A = coupleEngage.get(B_PrefereDe_A);
 				coupleEngage.put(B_PrefereDe_A, ce_A);
 				tmpListeDes_B.remove(B_PrefereDe_A);
 			}else{
 				String autre_A = coupleEngage.get(B_PrefereDe_A);
 				tmpListeDes_A.add(autre_A);
 				coupleEngage.put(B_PrefereDe_A, ce_A);
-				
 			}
 			if(tmpPreferenceDes_B.get(B_PrefereDe_A).indexOf(ce_A)!= -1){
 				Iterator<String> iter = tmpPreferenceDes_B.get(B_PrefereDe_A).subList(
@@ -52,7 +51,8 @@ public class ExtendedStable implements StableStrategie, Convertable {
 				}
 			}
 		}
-		System.out.println(coupleEngage);
+		
+		afficheLeCouplag(coupleEngage);
 		return coupleEngage;
 	}
 
@@ -70,35 +70,12 @@ public class ExtendedStable implements StableStrategie, Convertable {
 		
 	}
 
-	@Override
-	public void afficheLeCouplage(Map<String, ArrayList<List<String>>> preferenceDes_A,
-			Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> ListeDes_B) {
+	public void afficheLeCouplag(Map<String, String> coupleEngage) {
 		
-		System.out.println("------- Preferences des Hommes --------");
-		for (Entry<String, ArrayList<List<String>>> entry : preferenceDes_A.entrySet()) {
-			String key = entry.getKey();
-			System.out.println(key+ ": ");
-			ArrayList<List<String>> myList = entry.getValue();
-
-
-			for (List<String> entry1 : myList) {
-				System.out.println(entry1);	              
-			}
-			System.out.println();
+		for(Entry<String, String> couple : coupleEngage.entrySet()){
+			System.out.println("| "+ couple.getKey() + " ♥ " + couple.getValue());
 		}
-
-		System.out.println("------- Preferences des Femmes --------");
-		for (Entry<String, ArrayList<List<String>>> entry : preferenceDes_B.entrySet()) {
-			String key = entry.getKey();
-			System.out.print(key+ ": ");
-			ArrayList<List<String>> myList = entry.getValue();
-
-
-			for (List<String> entry1 : myList) {
-				System.out.println(entry1);	              
-			}
-			System.out.println();
-		}
+		
 		
 	}
 
@@ -114,7 +91,7 @@ public class ExtendedStable implements StableStrategie, Convertable {
 			List<String> tmplist = new ArrayList<String>();
 			for(List<String> list : entrymap.getValue()){
 				if(list.size()>1){
-					//Collections.shuffle(list);
+					Collections.shuffle(list);
 					for(String s : list)
 						tmplist.add(s);
 				}else{
@@ -125,4 +102,15 @@ public class ExtendedStable implements StableStrategie, Convertable {
 		}
 		return tmp;
 		}
+
+
+
+
+
+	@Override
+	public void afficheLeCouplage(Map<String, ArrayList<List<String>>> preferenceDes_A,
+			Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> listeDes_B) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -9,8 +9,8 @@ Amy
 3 Jay Sky Raze
 
 Ciri
-1 Jay Aron Raze
-2 Sky
+1 Sky Aron Raze
+2 Jay
 3 Dave
 
 Lili
