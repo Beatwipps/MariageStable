@@ -1,4 +1,4 @@
-
+	
 \title{Les Mariages Stables}
 \author{
         Jordann Perrotta \\
@@ -7,9 +7,42 @@
 \date{\today}
 
 \documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage[frenchb]{babel}
 \usepackage[Algorithme]{algorithm}
 \usepackage{algorithmic}
+%%% francisation des algorithmes
+\renewcommand{\algorithmicrequire} {\textbf{\textsc{Entrées:}}}
+\renewcommand{\algorithmicensure}  {\textbf{\textsc{Sorties:}}}
+\renewcommand{\algorithmicwhile}   {\textbf{tantque}}
+\renewcommand{\algorithmicdo}      {\textbf{faire}}
+\renewcommand{\algorithmicendwhile}{\textbf{fin tantque}}
+\renewcommand{\algorithmicend}     {\textbf{fin}}
+\renewcommand{\algorithmicif}      {\textbf{si}}
+\renewcommand{\algorithmicendif}   {\textbf{finsi}}
+\renewcommand{\algorithmicelse}    {\textbf{sinon}}
+\renewcommand{\algorithmicthen}    {\textbf{alors}}
+\renewcommand{\algorithmicfor}     {\textbf{pour}}
+\renewcommand{\algorithmicforall}  {\textbf{pour tout}}
+\renewcommand{\algorithmicdo}      {\textbf{faire}}
+\renewcommand{\algorithmicendfor}  {\textbf{fin pour}}
+\renewcommand{\algorithmicloop}    {\textbf{boucler}}
+\renewcommand{\algorithmicendloop} {\textbf{fin boucle}}
+\renewcommand{\algorithmicrepeat}  {\textbf{répéter}}
+\renewcommand{\algorithmicuntil}   {\textbf{jusqu'à}}
+
+\floatname{algorithm}{Algorithme}
+
+\let\mylistof\listof
+\renewcommand\listof[2]{\mylistof{algorithm}{Liste des algorithmes}}
+
+% pour palier au problème de niveau des algos
+\makeatletter
+\providecommand*{\toclevel@algorithm}{0}
+\makeatother
+
+%\listofalgorithms % pour lister les algos (après la toc)
 \begin{document}
 \maketitle
 
@@ -17,190 +50,264 @@
 
 \newpage
 \section{Introduction}
-En 1962, David Gale et Lloyd Shapley ont pr\'esent\'e le probl\`eme du mariage
-stable dans un article intitul\'e "Les admissions aux universit\'e et la
-stabilit\'e du mariage".
-Ils ont pos\'e et r\'epondu \`a la question de savoir s'il est possible de
-trouver un mariage stable impliquant $n$ hommes et $n$ femmes.
-Dans leur r\'eponse, ils pr\'esentent l'algorithme suivant pour
-trouver un mariage stable.
-L'algorithme Gale-Shapley implique un certain nombre de "rounds" (ou
-"it\'erations"). Dans le premier tour, chaque homme non engag\'e propose 
-\`a la femme qu'il pr\'ef\`ere le plus, puis chaque femme 
-r\'epond «peut-être» au pr\'etendant qu'elle pr\'ef\`ere et «non» \`a tous
-les autres pr\'etendants. Elle est alors provisoirement «engag\'ee» pour le
-pr\'etendant qu'elle pr\'ef\`ere jusqu'ici, et ce pr\'etendant lui est
-\'egalement engag\'e provisoirement.
-Dans chaque tour suivant, chaque homme non engag\'e propose \`a la
-femme qu'il pr\'ef\`ere le plus parmis les femmes auquel il n'a pas encore
-propos\'e (peu importe si la femme est d\'ej\`a engag\'ee),puis chaque femme r\'epond «peut-être»
-si elle est actuellement pas engag\'e ou si elle pr\'ef\`ere cet homme plutot
-que son partenaire actuel (dans ce cas, elle rejette son partenaire provisoire actuel
-qui devient non engag\'e).
-Le caractère provisoire des engagements conserve le droit d'une femme d\'ej\`a
-engag\'ee de «n\'egocier» (et, en l'occurrence, de «jeter» son partenaire
-jusqu'\`a ce moment-l\`a).
-Ce processus est r\'ep\'et\'e jusqu'\`a ce que tout le monde soit engag\'e.
+Les algorithmes pour trouver des solutions au problème du mariage stable ont des applications dans diverses situations du monde réel, peut-être la plus connue étant celle des étudiants diplômés en médecine à leurs premiers offres d'emploi. Une application importante et à grande échelle d'un mariage stable consiste à affecter les utilisateurs aux serveurs d'un grand service Internet distribué. Des milliards d'utilisateurs accèdent à des pages Web, des vidéos et d'autres services sur Internet, ce qui oblige chaque utilisateur à correspondre à l'un des centaines de milliers de serveurs du monde entier qui offrent ce service. Un utilisateur préfère des serveurs suffisamment proches pour fournir un temps de réponse plus rapide pour le service demandé, ce qui entraîne une commande préférentielle des serveurs pour chaque utilisateur. Chaque serveur préfère servir les utilisateurs à un coût inférieur, ce qui entraîne une commande préférentielle des utilisateurs pour chaque serveur. Les réseaux de distribution de contenu qui distribuent la plupart du contenu et des services du monde résolvent ce problème de mariage stable complexe entre utilisateurs et serveurs toutes les secondes afin de permettre à des milliers d'utilisateurs d'être associés à leurs serveurs respectifs qui peuvent fournir les pages Web, les vidéos demandées, et tant d'autres services.
+\\Dans la Section 2, nous aborderons les définitions relatives au mariage stable ainsi que plusieurs exemples d'illustrations. Dans la section 3, nous expliquerons les différents types de recherche de  mariage stable qu'il existe, leurs pseudo-codes, quelques proposition et théorèmes, ainsi que certaines qualités de mesure d'évaluation du mariage stable que l'on peut obtenir. Dans la section 4, nous détaillerons les algorithmes de résolution du  mariage stable dans le langage Java, les structures de données utilisés ainsi que leurs utilisations. Pour finir, dans la section 5, nous verrons comment utiliser ce projet, son installation et les issus possibles de résultat.
 
-%\`A la fin de cet algorithme, nous sommes garantis que tout le monde est
-%mari\'es.
-%En fin de compte, il ne peut y avoir un homme et une femme \`a la fois non
-%engages, car il doit lui avoir propos\'e \`a un moment donne (puisqu'un homme
-%finira par proposer \`a tout le monde, le cas \'ech\'eant) et, s'il est
-%propos\'e, elle serait n\'ecessairement engag\'ee (\`a quelqu'un) par la suite.
+%Ils ont posé et répondu à la question de savoir s'il est possible de
+%trouver un mariage stable impliquant $n$ hommes et $n$ femmes.
+%Dans leur réponse, ils présentent l'algorithme suivant pour
+%trouver un mariage stable.
+%L'algorithme Gale-Shapley implique un certain nombre de "rounds" (ou
+%"itérations"). Dans le premier tour, chaque homme non engagé propose 
+%à la femme qu'il préfère le plus, puis chaque femme 
+%répond "peut-être" au prétendant qu'elle préfère et "non" à tous
+%les autres prétendants. Elle est alors provisoirement "engagée" pour le
+%prétendant qu'elle préfère jusqu'ici, et ce prétendant lui est
+%également engagé provisoirement.
+%Dans chaque tour suivant, chaque homme non engagé propose à la
+%femme qu'il préfère le plus parmi les femmes auquel il n'a pas encore
+%proposé (peu importe si la femme est déjà engagée),puis chaque femme répond "peut-être"
+%si elle est actuellement pas engagé ou si elle préfère cet homme plutot
+%que son partenaire actuel (dans ce cas, elle rejette son partenaire provisoire actuel
+%qui devient non engagé).
+%Le caractère provisoire des engagements conserve le droit d'une femme déjà
+%engagée de "négocier" (et, en l'occurrence, de "jeter" son partenaire
+%jusqu'à ce moment-là).
+%Ce processus est répété jusqu'à ce que tout le monde soit engagé.
+
+%à la fin de cet algorithme, nous sommes garantis que tout le monde est
+%mariés.
+%En fin de compte, il ne peut y avoir un homme et une femme à la fois non
+%engages, car il doit lui avoir proposé à un moment donne (puisqu'un homme
+%finira par proposer à tout le monde, le cas échéant) et, s'il est
+%proposé, elle serait nécessairement engagée (à quelqu'un) par la suite.
 %Puis, cet algorithme nous garantit que le mariage est stable. Soit $f$ une
-% femme et $h$ un homme. Ils sont tout engag\'es par des partenaire diff\'erents. \`A la
-%fin de l'algorithme, il n'est pas possible que $f$ et $h$ pr\'ef\`erent 
+% femme et $h$ un homme. Ils sont tout engagés par des partenaire différents. à la
+%fin de l'algorithme, il n'est pas possible que $f$ et $h$ préfèrent 
 %l'un l'autre sur leurs partenaires actuels.
-%Si $h$ pr\'ef\`ere $f$ \`a son partenaire actuel, il a du propos\'e \`a
-%$f$ avant de proposer \`a son partenaire actuel. Si $f$ a accept\'e sa
-%proposition, mais qu'elle n'est pas mari\'ee avec lui \`a la fin, c'est qu'elle
-%du l'abandonn\'e pour quelqu'un qu'elle pr\'ef\'erait plus, et n'a donc pas
+%Si $h$ préfère $f$ à son partenaire actuel, il a du proposé à
+%$f$ avant de proposer à son partenaire actuel. Si $f$ a accepté sa
+%proposition, mais qu'elle n'est pas mariée avec lui à la fin, c'est qu'elle
+%du l'abandonné pour quelqu'un qu'elle préférait plus, et n'a donc pas
 %envie de $h$ plus que son partenaire actuel.
-%Si $f$ a rejet\'e sa proposition, elle \'etait d\'eja avec quelqu'un qu'elle
+%Si $f$ a rejeté sa proposition, elle était déja avec quelqu'un qu'elle
 %aimait plus que $h$.
-\subparagraph{Proposition 1}
-L'algorithme de Gale-Shapley se termine.
-\subparagraph{}
-Soit $n$ hommes et $n$ femmes impliqu\'ees dans l'algorithme. Donc, un homme
-doit proposer \`a au plus $n$ femme avant d'\^etre accept\'e ou rejet\'e par
-cette derni\`ere.
-Donc au plus $n^2$ propositions peuvent se produire, apr\`es quoi l'algorithme
-se termine.
+%\subparagraph{Proposition 1}
+%L'algorithme de Gale-Shapley se termine.
+%\subparagraph{}
+%Soit $n$ hommes et $n$ femmes impliquées dans l'algorithme. Donc, un homme
+%doit proposer à au plus $n$ femme avant d'être accepté ou rejeté par
+%cette dernière.
+%Donc au plus $n^2$ propositions peuvent se produire, après quoi l'algorithme
+%se termine.
+%
+%\subparagraph{Proposition 2}
+%à la fin de cet algorithme, tout le monde est mariés.
+%\subparagraph{}
+%Supposons la contradiction que $m$ est un homme non marié à la fin de
+%l'algorithme Gale-Shapley. Ensuite, il y a forcément une femme libre $w$,
+%car il y a le même nombre d'hommes et de femmes et personne ne peut être
+%marié à plus d'une personne. Donc, si une femme obtient une
+%proposition, elle sera mariée lorsque l'algorithme se terminera.
+%Donc, $w$ n'a reçu aucune proposition. Mais, afin que l'algorithme puisse
+%se terminer, l'homme doit être marié, ce qu'il n'est pas le cas,
+%ou a été rejeté par chaque femme, y compris $w$. Donc $m$ a d\^u
+%proposé à $w$, ce qui est une contradiction. Donc $m$ doit être marié
+%à la fin de l'algorithme. Il s'ensuit immédiatement que chaque femme doit se
+%marier à la fin de l'algorithme de Gale-Shapley.
+%
+%\subparagraph{Théorème}
+%L'algorithme de Gale-Shapley produit un mariage stable.
+%\subparagraph{}
+%Supposons une contradiction selon laquelle l'algorithme de Gale-Shapley produit
+%une correspondance instable pour une instance du problème du mariage stable. 
+%Donc, il existe une paire $(m, w')$, de sorte que $m$ préfère $w'$ à $w$, 
+%son partenaire assigné, et $w'$ préfère $m$ à $m'$, 
+%son partenaire assigné. Ensuite, $m$ a proposé à $w'$ avant qu'il ait
+%proposé à $w$, puisque $w'$ est avant $w$ sur sa liste. Mais une femme ne
+%peut que rejeter un homme si elle reçoit une proposition d'un homme qu'elle
+%préfère.
+%Donc, si une femme rejette un homme, c'est qu'elle préfère son dernier
+%partenaire à l'homme rejeté.
+%Donc $w'$ préfère $m'$ à $m$, ce qui est une contradiction. 
+%Ainsi, l'algorithme de Gale-Shapley produit une correspondance stable.
+\newpage
+\section{Définition}
 
-\subparagraph{Proposition 2}
-\`A la fin de cet algorithme, tout le monde est mari\'es.
-\subparagraph{}
-Supposons la contradiction que $m$ est un homme non mari\'e \`a la fin de
-l'algorithme Gale-Shapley. Ensuite, il y a forc\'ement une femme libre $w$,
-car il y a le m\^eme nombre d'hommes et de femmes et personne ne peut \^etre
-mari\'e \`a plus d'une personne. Donc, si une femme obtient une
-proposition, elle sera mari\'ee lorsque l'algorithme se terminera.
-Donc, $w$ n'a re\c{c}u aucune proposition. Mais, afin que l'algorithme puisse
-se terminer, l'homme doit \^etre mari\'e, ce qu'il n'est pas le cas,
-ou a \'et\'e rejet\'e par chaque femme, y compris $w$. Donc $m$ a d\^u
-propos\'e \`a $w$, ce qui est une contradiction. Donc $m$ doit \^etre mari\'e
-\`a la fin de l'algorithme. Il s'ensuit immédiatement que chaque femme doit se
-marier \`a la fin de l'algorithme de Gale-Shapley.
+%En 1962, David Gale et Lloyd Shapley ont présenté le problème du mariage stable dans un article %intitulé "Les admissions aux université et la stabilité du mariage". 
+Donnons nous pour ces définitions un ensemble d'hommes $H$ et un ensemble
+de femmes $F$ de même cardinalité.
+\subsection{Mariage stable}
+Un mariage 
 
-\subparagraph{Th\'eor\`eme}
-L'algorithme de Gale-Shapley produit un mariage stable.
-\subparagraph{}
-Supposons une contradiction selon laquelle l'algorithme de Gale-Shapley produit
-une correspondance instable pour une instance du probl\`eme du mariage stable. 
-Donc, il existe une paire $(m, w')$, de sorte que $m$ pr\'ef\`ere $w'$ \`a $w$, 
-son partenaire assign\'e, et $w'$ pr\'ef\`ere $m$ \`a $m'$, 
-son partenaire assign\'e. Ensuite, $m$ a propos\'e \`a $w'$ avant qu'il ait
-propos\'e \`a $w$, puisque $w'$ est avant $w$ sur sa liste. Mais une femme ne
-peut que rejeter un homme si elle re\c{c}oit une proposition d'un homme qu'elle
-pr\'ef\`ere.
-Donc, si une femme rejette un homme, c'est qu'elle pr\'ef\`ere son dernier
-partenaire \`a l'homme rejet\'e.
-Donc $w'$ pr\'ef\`ere $m'$ \`a $m$, ce qui est une contradiction. 
-Ainsi, l'algorithme de Gale-Shapley produit une correspondance stable.
-
-\section{D\'efinition}
-
-Donnons nous pour ces definitions un ensemble d'hommes $H$ et un ensemble
-de femmes $F$
 
 \subsection{Couplage}
+
 Un couplage $c$ est une relation fonctionnelle et injective entre $H$ et $F$.
 
 En d’autres termes, c'est une bijection entre un sous-ensemble de $H$ et un
 sous-ensemble de $F$.
+Chaque homme peut être marié à au plus une femme, et vice-versa.
 
 \subsection{Couplage parfait}
 Un couplage est parfait si c’est une bijection entre $H$ et $F$.
+En d'autre terme, aucun homme et aucun femme ne reste célibataire.\\\\
 
+Pour la suite de ces définitions, on suppose que chaque homme classe toutes les femmes par ordre de
+préférence, et inversement.
 
-\subsection{Couplage unstable}
-Un couplage est unstable si il existe un homme $h$ et une femme $f$ qui ne sont
-pas partenaire mais chacun d'entre eux prefere le partenaire de l'autre dans ce
-couplage. On dit que cette paire $h$ - $f$ est une paire bloquante.
+\subsection{Couplage instable}
+Un couplage est instable si il existe un homme $h$ et une femme $f$ qui ne sont
+pas partenaire mais chacun d'entre eux préfère le partenaire de l'autre dans ce
+couplage. %On dit que cette paire $h$ - $f$ est une paire bloquante.%
 
 \subsection{Couplage stable}
-Un couplage est stable si il n'y a pas de paire bloquante. De mani\`ere plus
-formel, un couplage est stable si il n'existe aucun homme $h$ et aucune femme
-$f$ qui serait tenter d'interchanger de partenaire.
-De plus un couplage est stable si un homme $h$ prefere une autre femme $f$ mais
-cette derniere ne prefere pas $h$ \`a son partenaire actuel et vice-versa.
+Il y a deux cas de figure pour un couplage stable:
+\subparagraph{}
+- Si il n'existe aucun homme $h_1$ et aucune femme
+$f_2$ qui serait tenter d’inter-changer de partenaire, le couplage est stable.
+\subparagraph{}
+- Si un homme $h_1$ préfère une autre femme $f_2$ mais $f_2$ ne préfère pas $h_1$ à son partenaire actuel, le mariage est stable. Idem dans l'autre sens, c'est à dire si une femme $f_1$ préfère une autre homme $h_2$ mais $h_2$ ne préfère pas $f_1$ à son partenaire actuel. 
+
+\subsection{Ordre}
+Un ordre, dans le cas des mariages stables, est la place qu'occupe un homme $h$ dans les préférences d'une femme $f$ et vice-versa. Chaque homme (respectivement femme) doit ordonner de manière décroissante ses préférences. Il existe deux type d'ordre, l'ordre partiel et l'ordre total.
+
+\subsection{Ordre partiel}
+Un ordre partiel, est un ordre qui admet une indifférence de personne à une position donnée dans les préférences. Pour l'exemple, un homme $h_1$, en position numéro 1, préférera autant une femme $f_1$ quune autre femme $f_2$.
+
 
 \subsection{Ordre total}
-Un ordre total est l'ordre de pr\'ef\'erence de chaque personne.
+Un ordre total est un ordre qui n'admet aucune indifférence de personne à une position donnée dans les préférences.
 Pour chaque $h \in H$, on a donc un ordre total $\leq_h$ sur $F$, et pour
 chaque $f \in F$ , un ordre total $\leq_f$ sur $H$.
-On note $f_1$ $\leq_h$ $f_2$ si $h$ pr\'ef\`ere $f_1$ \`a $f_2$.
-On note $f_1 \leq_h f_2$ si $h$ pr\'ef\`ere $f_1$ \`a $f_2$.
+On note $f_1$ $\leq_h$ $f_2$ si $h$ préfère $f_1$ à $f_2$.
+On note $f_1 \leq_h f_2$ si $h$ préfère $f_1$ à $f_2$.
 
-\section{Algorithmes et impl\'ementations}\label{algo}
-Dans cette section, les algorithmes sont impl\'ement\'es en Java ainsi que tout
-les structures de donn\'es. Pour commencer, afin de faciliter le choix des
-diff\'erents algorithme pour la r\'esolution d'une instance de mariage stable,
-le patern design "Strat\'egie" semble \^etre un bon choix. La strat\'egie de
-r\'esolution va d\'ependre de plusieurs facteurs, soit du type de donn\'e (si
-la gestion des indiff\'erence doit \^tre prise en consid\'eration), soit du
-choix de l'utilisateur. Si l'utilisateur d\'ecide d'utiliser une strat\'egie
-qui n'est pas optimal pour le type de donn\'e choisie, le programme va lui
-indiquer le meilleur algorithme pour la r\'esolution du probl\`eme. Chaque
-strat\'egie a une impl\'ementation diff\'erente, il y en a 3, une pour
-l'algorithme basique de Gale-Shapley, une pour l'algorithme weakly stable de
-Robert W.Irving et une autre pour le Strongly stable du m\^eme auteur.
-\subsection{Basic Stable}
-
-\subsubsection{Donn\'es}
-\subsubsection{PseudoCode}
+\section{Algorithmes et résolution}
+Il existe 2 types de résolution pour le problème du mariage stable.
+Le premier type est l'algorithme basique de Gale/Shapley, permettant de résoudre le problème de mariage stable lorsque les préférences des hommes et des femmes sont ordonnées sans ex-æquo possible. Le deuxième type se divise en sous-type, l'algorithme de Gale-Shapley étendu, la version dite "SUPER" (que nous n'aborderons pas dans ce rapport), puis la version dite "STRONG". Ce deuxième type existe dans le sens ou, il est possible d'avoir une indifférence de préférence entre tel et tel personne. Dans la vrai vie, il est tout à fait possible d'avoir des préférences ex-æquo, choisir entre une boulangerie ou une autre, un coiffeur ou un autre, un supermarché ou un autre, etc.. La version basique de résolution est un cas particulier qui peux s'appliquer uniquement si les choix réalisés sont strictement ordonnés. Dans la suite de cette section, nous allons voir les pseudo-codes de chaque type de résolution.
+\newpage
+\subsection{Basique}
+On fait évoluer un couplage partiel (i.e., pas parfait), initialement vide
+\subsubsection{Pseudo-Code}
 \begin{algorithm}
 \caption{Basic Stable}
 \begin{algorithmic} 
-\REQUIRE Initialiser tout les $m \in M$ et $w \in W$ a libre
-\ENSURE Un couplage stable
-\WHILE {∃ un homme libre $m$ qui peut encore proposer a une femme $w$}
-\STATE $w \leftarrow$ la premiere femme dans la liste de $m$ a qui $m$ n'a pas
+\REQUIRE 
+\begin{list}{}{'}
+	\item $M \leftarrow$ ensemble des hommes
+	\item $W \leftarrow$ ensemble des femmes
+    \item $liste_{pref}(w) \leftarrow$ liste de préférence de w 
+    \item $liste_{pref}(m) \leftarrow$ liste de préférence de m
+\end{list}      
+
+\STATE Initialiser tout les $m \in M$ et $w \in W$ à libre
+\WHILE {il existe un homme libre $m$ qui peut encore proposer à une femme $w$}
+\STATE $w \leftarrow$ la première femme dans la liste de $m$ a qui $m$ n'a pas
 encore propose
 \IF{$w$ est $libre$}
-\STATE $(m, w)$ devient engage
-\ELSE [il existe deja un couple $(m', w)$]
-\IF {$w$ prefere $m$ a $m'$}
+\STATE $(m, w)$ devient engagé
+\ELSE [il existe déjà un couple $(m', w)$]
+\IF {$w$ préfère $m$ a $m'$}
 \STATE $m'$ devient libre
 \STATE $(m, w)$ s'engage
 \ELSE
-\STATE $(m', w)$ se reengage
+\STATE $(m', w)$ se réengage
 \ENDIF
 \ENDIF
-\ENDWHILE
-\end{algorithmic}
-\end{algorithm}
-    
-\subsection{Weakly Stable}
-\subsubsection{Donn\'es}
-\subsubsection{PseudoCode}
-\begin{algorithm}
-\caption{Basic Stable}
-\begin{algorithmic} 
-\REQUIRE Initialiser tout les $m \in M$ et $w \in W$ a libre
+\ENDWHILE 
 \ENSURE Un couplage stable
-\WHILE {∃ un homme libre $m$}
-\STATE $w \leftarrow$ la premiere femme dans la liste de $m$
-\STATE $m$ propose et devient engage a $w$
-\IF{$w$ est $libre$}
-\STATE $(m, w)$ devient engage
-\ELSE [il existe deja un couple $(m', w)$]
-\IF {$w$ prefere $m$ a $m'$}
-\STATE $m'$ devient libre
-\STATE $(m, w)$ s'engager
-\ELSE
-\STATE $(m', w)$ se reengage
-\ENDIF
-\ENDIF
-\ENDWHILE
 \end{algorithmic}
 \end{algorithm}
 
-    
-\subsection{Strong Stable}
-\subsubsection{Donn\'es}
-\subsubsection{PseudoCode}
+\subsection{Weakly}
+Cette version 
+\subsubsection{Pseudo-Code}
+\begin{algorithm}
+\caption{Weakly Stable}
+\begin{algorithmic} 
+\REQUIRE 
+\begin{list}{}{'}
+	\item $M \leftarrow$ ensemble des hommes
+	\item $W \leftarrow$ ensemble des femmes
+    \item $liste_{pref}(w) \leftarrow$ liste de préférence de w 
+    \item $liste_{pref}(m) \leftarrow$ liste de préférence de m
+\end{list}
+
+\STATE Initialiser tout les $m \in M$ et $w \in W$ à libre
+\WHILE {il existe un homme libre $m$ qui peut encore proposer a une femme $w$}
+\STATE $w \leftarrow$ la première femme dans la liste de $m$ a qui $m$ n'a pas
+encore propose
+\STATE $m$ propose, et devient engagé à $w$
+\IF {il existe un homme $m'$ qui est déjà engagé avec $w$}
+\STATE assigner $m'$ à libre
+\ENDIF
+\FORALL {successeur $m''$ de m  dans $liste_{pref}(w)$	}
+\STATE supprimer la paire $(m'', w)$
+\ENDFOR
+\ENDWHILE
+\ENSURE Un couplage stable
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Strong}
+\subsubsection{Pseudo-Code}
+\begin{algorithm}
+\caption{Strong Stable}
+\begin{algorithmic} 
+\REQUIRE 
+\begin{list}{}{'}
+	\item $M \leftarrow$ ensemble des hommes
+	\item $W \leftarrow$ ensemble des femmes
+    \item $liste_{pref}(w) \leftarrow$ liste de préférence de w 
+    \item $liste_{pref}(m) \leftarrow$ liste de préférence de m
+\end{list}
+\STATE Initialiser tout les $m \in M$ et $w \in W$ à libre
+\REPEAT 
+	\WHILE  {il existe un homme libre $m$ qui peut encore proposer a une femme $w$}
+		\FORALL {femme à la tête de $liste_{pref}(m)$}
+			\STATE $m$ propose, et devient engagé à $w$
+			\FOR {chaque successeur strict $m'$ de $m$  dans $liste_{pref}(w)$}
+				\IF {$m'$ est engagé à w}
+					\STATE briser l'engagement
+				\ENDIF
+				\STATE supprimer la paire $(m', w)$
+			\ENDFOR
+		\ENDFOR
+	\ENDWHILE
+	\IF{ les couples obtenus ne forment pas un couplage parfait}
+		\STATE trouver la zone critique $Z$ des hommes
+		\FORALL {femme $w$  qui est engagé à un homme dans $Z$}
+			\STATE briser tout les engagements impliquant $w$
+			\FORALL{homme $m$ à la fin de $liste_{pref}(w)$}
+				\STATE supprimer la paire $(m, w)$				
+			\ENDFOR
+		\ENDFOR
+	\ENDIF
+\UNTIL{ce que chaque $liste_{pref}(m)$ soit vide ou que tout le monde soit engagé}
+\IF {tout le monde est engagé}
+	\STATE les engagements forment un couplage fortement stable 
+\ELSE
+\STATE il n'existe pas de couplage fortement stable 
+\ENDIF
+
+\end{algorithmic}
+\end{algorithm}
+
+\section{Algorithmes et implémentations}\label{algo}
+Dans cette section, les algorithmes sont implémentés en Java ainsi que tout
+les structures de donnés. Pour commencer, afin de faciliter le choix des
+différents algorithme pour la résolution d'une instance de mariage stable,
+le patern design "Stratégie" semble être un bon choix. La stratégie de
+résolution va dépendre de plusieurs facteurs, soit du type de donné (si
+la gestion des indifférence doit être prise en considération), soit du
+choix de l'utilisateur. Si l'utilisateur décide d'utiliser une stratégie
+qui n'est pas optimal pour le type de donné choisie, le programme va lui
+indiquer le meilleur algorithme pour la résolution du problème. Chaque
+stratégie a une implémentation différente, il y en a 3, une pour
+l'algorithme basique de Gale-Shapley, la seconde est celle du "WEAKLY" et la derniere, l'algorithme "STRONG".
+
+\section{Installation}
 
 \section{Results}\label{results}
 In this section we describe the resul

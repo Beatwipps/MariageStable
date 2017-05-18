@@ -29,7 +29,6 @@ public class BasicStable implements StableStrategie, Convertable{
 		tmpPreferenceDes_A = convert(preferenceDes_A);
 		Map<String, List<String>> tmpPreferenceDes_B = new HashMap<String, List<String>>();
 		tmpPreferenceDes_B = convert(preferenceDes_B);
-		System.out.println("Conversion : "+ tmpPreferenceDes_B);
 		List<String> tmpListeDes_A = new ArrayList<String>(listeDes_A);
 		List<String> tmpListeDes_B = new ArrayList<String>(listeDes_B);
 		Map<String, String> coupleEngage = new HashMap<String, String>();
@@ -54,6 +53,7 @@ public class BasicStable implements StableStrategie, Convertable{
 				}
 			}
 		}
+		verifieLeCouplageBasique(preferenceDes_A, preferenceDes_B, tmpListeDes_A, tmpListeDes_B, coupleEngage);
 		return coupleEngage;
 	}
 
@@ -63,8 +63,8 @@ public class BasicStable implements StableStrategie, Convertable{
 	 * 
 	 */
 	
-	@Override
-	public boolean verifieLeCouplage(Map<String, ArrayList<List<String>>> preferenceDes_A,
+	
+	public boolean verifieLeCouplageBasique(Map<String, ArrayList<List<String>>> preferenceDes_A,
 			Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> listeDes_B,
 			Map<String, String> coupleEngage) {
 		

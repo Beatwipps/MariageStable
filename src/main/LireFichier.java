@@ -11,7 +11,7 @@ public class LireFichier {
 	protected String source;
 	private Map<String, ArrayList<List<String>>> mapDePreferences;
 	private List<String> listeDePersonnes;
-	
+	private boolean estLisible = true;
 	
 	public LireFichier(String source, StableStrategie strat) {
 		this.source = source;
@@ -57,9 +57,9 @@ public class LireFichier {
 		}
 		if(indifference == true && strat instanceof BasicStable){
 			System.out.printf("Le fichier %s contient des indifferences et la strategie utilisé est Basique. ERREUR", source);
-			return null;
+			setEstLisible(false);
 		}
-			
+		
 		return map;    
 	}
 	
@@ -106,6 +106,16 @@ public class LireFichier {
 	}
 
 
+	public boolean isEstLisible() {
+		return estLisible;
+	}
+
+
+	public void setEstLisible(boolean estLisible) {
+		this.estLisible = estLisible;
+	}
+
+	
 
 
 	

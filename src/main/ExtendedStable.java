@@ -46,13 +46,18 @@ public class ExtendedStable implements StableStrategie, Convertable {
 						tmpPreferenceDes_B.get(B_PrefereDe_A).size())
 						.iterator();
 				while (iter.hasNext()) {
-				    	iter.next();
+					String current = iter.next();
+				    	System.out.println(current);
+				    	if(tmpPreferenceDes_A.get(current).indexOf(B_PrefereDe_A) != -1)
+							tmpPreferenceDes_A.get(current).remove(tmpPreferenceDes_A.get(current).indexOf(B_PrefereDe_A));
 				        iter.remove();
 				}
 			}
+			
 		}
-		
 		afficheLeCouplag(coupleEngage);
+		verifieLeCouplageWeakly(tmpPreferenceDes_A, tmpPreferenceDes_B, tmpListeDes_A, tmpListeDes_B, coupleEngage);
+		
 		return coupleEngage;
 	}
 
@@ -60,13 +65,43 @@ public class ExtendedStable implements StableStrategie, Convertable {
 	
 	
 	
-	@Override
-	public boolean verifieLeCouplage(Map<String, ArrayList<List<String>>> preferencesDes_A,
-			Map<String, ArrayList<List<String>>> preferenceDes_B, List<String> listeDes_A, List<String> listeDes_B,
+
+	public boolean verifieLeCouplageWeakly(Map<String, List<String>> preferenceDes_A,
+			Map<String, List<String>> preferenceDes_B, List<String> listeDes_A, List<String> listeDes_B,
 			Map<String, String> coupleEngage) {
 		
-		StableStrategie basic = new BasicStable();
-		return basic.verifieLeCouplage(preferencesDes_A, preferenceDes_B, listeDes_A, listeDes_B, coupleEngage);
+		Map<String, String> coupleEngageInverse = new HashMap<String, String>();
+		for(Map.Entry<String, String> couple: coupleEngage.entrySet()){
+			coupleEngageInverse.put(couple.getValue(), couple.getKey());
+		}
+		
+		
+		if(!coupleEngage.keySet().containsAll(listeDes_B)){
+			return false;
+		}
+
+		if(!coupleEngage.values().containsAll(listeDes_A)){
+			return false;
+		}
+		for(Entry<String, String> couple : coupleEngage.entrySet()){
+			String ce_A = couple.getValue();
+			for(String b : preferenceDes_A.get(ce_A)){
+				if(preferenceDes_A.get(ce_A).indexOf(b) < preferenceDes_A.get(ce_A).indexOf(couple.getKey())){
+					System.out.printf("%s prefere %s à %s\n", ce_A, b, couple.getKey());
+					String a = coupleEngage.get(b);
+					if(preferenceDes_B.get(b).indexOf(ce_A) < preferenceDes_B.get(b).indexOf(a)){
+						System.out.printf("%s prefere %s à %s\n", b, ce_A, a);
+						System.out.println("Le couplage n'est pas stable");
+						return false;
+					}else{
+						System.out.printf("Par contre %s prefere %s, plutôt que %s", b, coupleEngage.get(b), ce_A);
+						System.out.println();
+					}
+				}
+			}
+		}
+		System.out.println("\nLe couplage est stable");
+		return true;
 		
 	}
 

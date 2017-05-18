@@ -1,32 +1,91 @@
 package main;
 
-
+import java.util.Scanner;
 
 public class Client {
 
 	public static void main(String[] args) {
+		
+		
+		StableStrategie choix = null;
+		
+		System.out.println("Choisissez la strategie :");
+		System.out.println("(1) pour le basique");
+		System.out.println("(2) pour le weakly");
+		System.out.println("(3) pour le strong");
+		
+		Scanner scanIn = new Scanner(System.in);
+	    int numStrat = scanIn.nextInt();    
+	    switch(numStrat){
+			 case 1:
+				 StableStrategie Base = new BasicStable();
+				 choix = Base;
+		     break;
+		     case 2:
+		 		StableStrategie Ext = new ExtendedStable();
+		 		choix = Ext;
+		     break;
+		     case 3:
+		    	 StableStrategie Str = new StrongStable();
+		    	 choix = Str;
+		     break;
+		     default:
+		         System.out.println("La valeur rentré n'est pas juste.");
+		     break;
+		 }
+	    System.out.println("Voulez-vous utiliser le jeu de donnée du repertoire JeuDeDonnées ? (1) : Oui (2) : Non");
+	    int numJDD = scanIn.nextInt();
+	    LireFichier JDD_A = null;
+	    LireFichier JDD_B = null;
+	    
+	    switch(numJDD){
+	    	case 1 :  
+	    		if(choix instanceof BasicStable){
+	    			JDD_A = new LireFichier("./JeuDeDonnees/affBasicA.txt", choix);
+	    			JDD_B = new LireFichier("./JeuDeDonnees/affBasicB.txt", choix);
+	    			
+	    		}
+	    		else{
+	    			JDD_A = new LireFichier("./JeuDeDonnees/AffectationAvecIndifference_A.txt", choix);
+	    			JDD_B = new LireFichier("./JeuDeDonnees/AffectationAvecIndifference_B.txt", choix);
+	    		}
+	    		break;
+	    	case 2 : 
+	    		scanIn.nextLine();
 
-
-//		StableStrategie Base = new BasicStable();
-		StableStrategie Ext = new ExtendedStable();
-//		StableStrategie Str = new StrongStable();
+	    		System.out.print("Entrez le chemin du fichier .txt correspondant aux A : ");
+    		    String cheminFichierTexteA = scanIn.nextLine();
+    		    JDD_A = new LireFichier(cheminFichierTexteA, choix);
+    		    while(JDD_A.isEstLisible() == false){
+    		    	System.out.println("Veuillez écrire un fichier valide");
+    		    	System.out.println("De nouveau, entrez le chemin du fichier .txt correspondant aux A : ");
+    		    	cheminFichierTexteA = scanIn.nextLine();
+    		    	JDD_A = new LireFichier(cheminFichierTexteA, choix);
+    		    }
+    		    	
+    		    System.out.println();
+    			
+    		    System.out.print("Entrez le chemin du fichier .txt correspondant aux B : ");
+    		    String cheminFichierTexteB = scanIn.nextLine();
+    		    JDD_B = new LireFichier(cheminFichierTexteB, choix);
+    		    while(JDD_B.isEstLisible() == false){
+    		    	System.out.println("Veuillez écrire un fichier valide");
+    		    	System.out.println("De nouveau, entrez le chemin du fichier .txt correspondant aux B : ");
+    		    	cheminFichierTexteB = scanIn.nextLine();
+    		    	JDD_B = new LireFichier(cheminFichierTexteA, choix);
+    		    }
+    			scanIn.close();
+    			break;
+	    	default:
+		         System.out.println("La valeur rentré n'est pas juste.");
+		     break;
+	    }
+	   
+	    System.out.println("Création d'une nouvelle instance de " + choix.getClass());
+		Instance I = new Instance(choix, JDD_A.getMap(), JDD_B.getMap(), JDD_A.getList(), JDD_B.getList());
 		
-		LireFichier A_Ext = new LireFichier("./src/main/AffectationAvecIndifference_A.txt", Ext);
-		LireFichier B_Ext = new LireFichier("./src/main/AffectationAvecIndifference_B.txt", Ext);
-//		LireFichier A_Base = new LireFichier("./src/main/AffectationBasic_A.txt", Base);
-//		LireFichier B_Base = new LireFichier("./src/main/AffectationBasic_B.txt", Base);
-//		LireFichier A_Str = new LireFichier("./src/main/AffectationAvecIndifference_A.txt", Str);
-//		LireFichier B_Str = new LireFichier("./src/main/AffectationAvecIndifference_B.txt", Str);
-		
-		Instance I1 = new Instance(Ext, A_Ext.getMap(), B_Ext.getMap(), A_Ext.getList(), B_Ext.getList());
-//		Instance I2 = new Instance(Base, A_Base.getMap(), B_Base.getMap(), A_Base.getList(), B_Base.getList());
-//		Instance I3 = new Instance(Str, A_Str.getMap(), B_Str.getMap(), A_Str.getList(), B_Str.getList());
-		
-		I1.executeStableStrategie();
-//		System.out.println("#########################################");
-//		I2.executeStableStrategie();
-		
-//		I3.executeStableStrategie();
+		System.out.println("Exécution de la stratégie en cours ..");
+		I.executeStableStrategie();
 	}
 
 }
