@@ -86,6 +86,7 @@ public class Main {
 		
 		System.out.println("Exécution de la stratégie en cours ..");
 		I.executeStableStrategie();
+
 	}
 
 }

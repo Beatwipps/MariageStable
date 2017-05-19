@@ -26,7 +26,6 @@ public class WeaklyStable implements StableStrategie, Convertable {
 		
 		tmpPreferenceDes_A = convert(preferenceDes_A);	
 		tmpPreferenceDes_B = convert(preferenceDes_B);
-//		System.out.println("Conversion : "+ tmpPreferenceDes_A);
 		
 		while(!tmpListeDes_A.isEmpty()){
 			String ce_A = tmpListeDes_A.remove(0);  
