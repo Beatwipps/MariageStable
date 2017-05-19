@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class ExtendedStable implements StableStrategie, Convertable {
+public class WeaklyStable implements StableStrategie, Convertable {
 
 
 	

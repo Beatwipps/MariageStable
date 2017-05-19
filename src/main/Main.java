@@ -2,7 +2,7 @@ package main;
 
 import java.util.Scanner;
 
-public class Client {
+public class Main {
 
 	public static void main(String[] args) {
 		
@@ -22,7 +22,7 @@ public class Client {
 				 choix = Base;
 		     break;
 		     case 2:
-		 		StableStrategie Ext = new ExtendedStable();
+		 		StableStrategie Ext = new WeaklyStable();
 		 		choix = Ext;
 		     break;
 		     case 3:

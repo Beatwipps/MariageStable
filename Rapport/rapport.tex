@@ -137,9 +137,6 @@ Les algorithmes pour trouver des solutions au problème du mariage stable ont de
 %En 1962, David Gale et Lloyd Shapley ont présenté le problème du mariage stable dans un article %intitulé "Les admissions aux université et la stabilité du mariage". 
 Donnons nous pour ces définitions un ensemble d'hommes $H$ et un ensemble
 de femmes $F$ de même cardinalité.
-\subsection{Mariage stable}
-Un mariage 
-
 
 \subsection{Couplage}
 
@@ -156,18 +153,14 @@ En d'autre terme, aucun homme et aucun femme ne reste célibataire.\\\\
 Pour la suite de ces définitions, on suppose que chaque homme classe toutes les femmes par ordre de
 préférence, et inversement.
 
-\subsection{Couplage instable}
-Un couplage est instable si il existe un homme $h$ et une femme $f$ qui ne sont
-pas partenaire mais chacun d'entre eux préfère le partenaire de l'autre dans ce
-couplage. %On dit que cette paire $h$ - $f$ est une paire bloquante.%
-
 \subsection{Couplage stable}
-Il y a deux cas de figure pour un couplage stable:
-\subparagraph{}
-- Si il n'existe aucun homme $h_1$ et aucune femme
-$f_2$ qui serait tenter d’inter-changer de partenaire, le couplage est stable.
-\subparagraph{}
-- Si un homme $h_1$ préfère une autre femme $f_2$ mais $f_2$ ne préfère pas $h_1$ à son partenaire actuel, le mariage est stable. Idem dans l'autre sens, c'est à dire si une femme $f_1$ préfère une autre homme $h_2$ mais $h_2$ ne préfère pas $f_1$ à son partenaire actuel. 
+Un couplage est dit stable si pour tout couple $(h, f)$ et $(h', f')$, il n'existe pas une interprétation tel que  $h$ préfère $f'$ à son partenaire actuel et $f'$ préfère $h$ à son partenaire actuel. De la même manière, la stabilité d'un couplage est possible dans le cas ou $h$ préfère $f'$ à son partenaire actuel, par contre $w'$ ne préfère pas $h$ à son partenaire actuel. 
+%Il y a deux cas de figure pour un couplage stable:
+%\subparagraph{}
+%- Si il n'existe aucun homme $h_1$ et aucune femme
+%$f_2$ qui serait tenter d’inter-changer de partenaire, le couplage est stable.
+%\subparagraph{}
+%- Si un homme $h_1$ préfère une autre femme $f_2$ mais $f_2$ ne préfère pas $h_1$ à son partenaire actuel, le mariage est stable. Idem dans l'autre sens, c'est à dire si une femme $f_1$ préfère une autre homme $h_2$ mais $h_2$ ne préfère pas $f_1$ à son partenaire actuel. 
 
 \subsection{Ordre}
 Un ordre, dans le cas des mariages stables, est la place qu'occupe un homme $h$ dans les préférences d'une femme $f$ et vice-versa. Chaque homme (respectivement femme) doit ordonner de manière décroissante ses préférences. Il existe deux type d'ordre, l'ordre partiel et l'ordre total.
@@ -185,7 +178,7 @@ On note $f_1 \leq_h f_2$ si $h$ préfère $f_1$ à $f_2$.
 
 \section{Algorithmes et résolution}
 Il existe 2 types de résolution pour le problème du mariage stable.
-Le premier type est l'algorithme basique de Gale/Shapley, permettant de résoudre le problème de mariage stable lorsque les préférences des hommes et des femmes sont ordonnées sans ex-æquo possible. Le deuxième type se divise en sous-type, l'algorithme de Gale-Shapley étendu, la version dite "SUPER" (que nous n'aborderons pas dans ce rapport), puis la version dite "STRONG". Ce deuxième type existe dans le sens ou, il est possible d'avoir une indifférence de préférence entre tel et tel personne. Dans la vrai vie, il est tout à fait possible d'avoir des préférences ex-æquo, choisir entre une boulangerie ou une autre, un coiffeur ou un autre, un supermarché ou un autre, etc.. La version basique de résolution est un cas particulier qui peux s'appliquer uniquement si les choix réalisés sont strictement ordonnés. Dans la suite de cette section, nous allons voir les pseudo-codes de chaque type de résolution.
+Le premier type est l'algorithme basique de Gale/Shapley, permettant de résoudre le problème de mariage stable lorsque les préférences des hommes et des femmes sont ordonnées sans ex-æquo possible. Le deuxième type se divise en sous-type, l'algorithme de Gale-Shapley étendu, la version dite "SUPER" (que nous n'aborderons pas dans ce rapport), puis la version dite "STRONG". Ce deuxième type existe dans le sens ou, il est possible d'avoir une indifférence de préférence entre tel et tel personne. Dans la vrai vie, il est tout à fait possible d'avoir des préférences ex-æquo, choisir entre une boulangerie ou une autre, un coiffeur ou un autre, un supermarché ou un autre, etc.. La version basique de résolution est un cas particulier qui peux s'appliquer uniquement si les choix réalisés sont strictement ordonnés. Ces type de résolution sont en réalité un sorte de mesure, si nous obtenons un couplage stable avec le "weakly", il est possible qu'un certain homme $h$ peut préférer une autre femme $w'$ que sa partenaire actuel, alors que $w'$ ne préférera moins $h$ à son partenaire actuel. De la même manière, nous pouvons affirmer que si un couplage stable à été trouvé par l'algorithme "STRONG", il n'existera aucun couple $(h, f)$ et $(h', f')$ tel que  $h$ préfère $f'$ à son partenaire actuel et $w'$ préfère $h$ à son partenaire actuel. Dans la suite de cette section, nous allons voir les pseudo-codes de chaque type de résolution.
 \newpage
 \subsection{Basique}
 On fait évoluer un couplage partiel (i.e., pas parfait), initialement vide
@@ -195,24 +188,22 @@ On fait évoluer un couplage partiel (i.e., pas parfait), initialement vide
 \begin{algorithmic} 
 \REQUIRE 
 \begin{list}{}{'}
-	\item $M \leftarrow$ ensemble des hommes
-	\item $W \leftarrow$ ensemble des femmes
-    \item $liste_{pref}(w) \leftarrow$ liste de préférence de w 
-    \item $liste_{pref}(m) \leftarrow$ liste de préférence de m
+	\item $H \leftarrow$ ensemble des hommes
+	\item $F \leftarrow$ ensemble des femmes
+    \item $liste_{pref}(f) \leftarrow$ liste de préférence de f
+    \item $liste_{pref}(h) \leftarrow$ liste de préférence de h
 \end{list}      
 
-\STATE Initialiser tout les $m \in M$ et $w \in W$ à libre
-\WHILE {il existe un homme libre $m$ qui peut encore proposer à une femme $w$}
-\STATE $w \leftarrow$ la première femme dans la liste de $m$ a qui $m$ n'a pas
+\STATE Initialiser tout les $h \in H$ et $f \in F$ à libre
+\WHILE {il existe un homme libre $m$ qui peut encore proposer à une femme $f$}
+\STATE $f \leftarrow$ la première femme dans la liste de $h$ a qui $h$ n'a pas
 encore propose
-\IF{$w$ est $libre$}
-\STATE $(m, w)$ devient engagé
-\ELSE [il existe déjà un couple $(m', w)$]
-\IF {$w$ préfère $m$ a $m'$}
-\STATE $m'$ devient libre
-\STATE $(m, w)$ s'engage
-\ELSE
-\STATE $(m', w)$ se réengage
+\IF{$f$ est $libre$}
+\STATE $(h, f)$ devient engagé
+\ELSE [il existe déjà un couple $(h', f)$]
+\IF {$f$ préfère $h$ a $h'$}
+\STATE $h'$ devient libre
+\STATE $(h, f)$ s'engage
 \ENDIF
 \ENDIF
 \ENDWHILE 
@@ -221,35 +212,36 @@ encore propose
 \end{algorithm}
 
 \subsection{Weakly}
-Cette version 
 \subsubsection{Pseudo-Code}
 \begin{algorithm}
 \caption{Weakly Stable}
 \begin{algorithmic} 
 \REQUIRE 
 \begin{list}{}{'}
-	\item $M \leftarrow$ ensemble des hommes
-	\item $W \leftarrow$ ensemble des femmes
-    \item $liste_{pref}(w) \leftarrow$ liste de préférence de w 
-    \item $liste_{pref}(m) \leftarrow$ liste de préférence de m
-\end{list}
+	\item $H \leftarrow$ ensemble des hommes
+	\item $F \leftarrow$ ensemble des femmes
+    \item $liste_{pref}(f) \leftarrow$ liste de préférence de f
+    \item $liste_{pref}(h) \leftarrow$ liste de préférence de h
+\end{list} 
 
-\STATE Initialiser tout les $m \in M$ et $w \in W$ à libre
-\WHILE {il existe un homme libre $m$ qui peut encore proposer a une femme $w$}
-\STATE $w \leftarrow$ la première femme dans la liste de $m$ a qui $m$ n'a pas
+\STATE Initialiser tout les $h \in H$ et $f \in F$ à libre
+\WHILE {il existe un homme libre $m$ qui peut encore proposer à une femme $f$}
+\STATE $f \leftarrow$ la première femme dans la liste de $h$ a qui $h$ n'a pas
 encore propose
-\STATE $m$ propose, et devient engagé à $w$
-\IF {il existe un homme $m'$ qui est déjà engagé avec $w$}
-\STATE assigner $m'$ à libre
+\STATE $h$ propose, et devient engagé à $f$
+\IF {il existe un homme $h'$ qui est déjà engagé avec $f$}
+\STATE assigner $h'$ à libre
 \ENDIF
-\FORALL {successeur $m''$ de m  dans $liste_{pref}(w)$	}
-\STATE supprimer la paire $(m'', w)$
+\FORALL {successeur $h''$ de m  dans $liste_{pref}(f)$	}
+\STATE supprimer la paire $(h'', f)$
 \ENDFOR
 \ENDWHILE
 \ENSURE Un couplage stable
 \end{algorithmic}
 \end{algorithm}
+\subsubsection{Explication}
 
+Cet algorithme revient à utiliser l'algorithme basique, auquel cas nous avons arbitrairement ordonné les indifférences. 
 \subsection{Strong}
 \subsubsection{Pseudo-Code}
 \begin{algorithm}
@@ -257,34 +249,34 @@ encore propose
 \begin{algorithmic} 
 \REQUIRE 
 \begin{list}{}{'}
-	\item $M \leftarrow$ ensemble des hommes
-	\item $W \leftarrow$ ensemble des femmes
-    \item $liste_{pref}(w) \leftarrow$ liste de préférence de w 
-    \item $liste_{pref}(m) \leftarrow$ liste de préférence de m
-\end{list}
-\STATE Initialiser tout les $m \in M$ et $w \in W$ à libre
+	\item $H \leftarrow$ ensemble des hommes
+	\item $F \leftarrow$ ensemble des femmes
+    \item $liste_{pref}(f) \leftarrow$ liste de préférence de f
+    \item $liste_{pref}(h) \leftarrow$ liste de préférence de h
+\end{list} 
+\STATE Initialiser tout les $h \in H$ et $f \in F$ à libre
 \REPEAT 
-	\WHILE  {il existe un homme libre $m$ qui peut encore proposer a une femme $w$}
-		\FORALL {femme à la tête de $liste_{pref}(m)$}
-			\STATE $m$ propose, et devient engagé à $w$
-			\FOR {chaque successeur strict $m'$ de $m$  dans $liste_{pref}(w)$}
-				\IF {$m'$ est engagé à w}
+	\WHILE  {il existe un homme libre $h$ qui peut encore proposer à une femme $f$}
+		\FORALL {femme à la tête de $liste_{pref}(h)$}
+			\STATE $h$ propose, et devient engagé à $f$
+			\FOR {chaque successeur strict $h'$ de $h$  dans $liste_{pref}(f)$}
+				\IF {$h'$ est engagé à w}
 					\STATE briser l'engagement
 				\ENDIF
-				\STATE supprimer la paire $(m', w)$
+				\STATE supprimer la paire $(h',f)$
 			\ENDFOR
 		\ENDFOR
 	\ENDWHILE
 	\IF{ les couples obtenus ne forment pas un couplage parfait}
 		\STATE trouver la zone critique $Z$ des hommes
-		\FORALL {femme $w$  qui est engagé à un homme dans $Z$}
-			\STATE briser tout les engagements impliquant $w$
-			\FORALL{homme $m$ à la fin de $liste_{pref}(w)$}
-				\STATE supprimer la paire $(m, w)$				
+		\FORALL {femme $f$  qui est engagé à un homme dans $Z$}
+			\STATE briser tout les engagements impliquant $f$
+			\FORALL{homme $h$ à la fin de $liste_{pref}(f)$}
+				\STATE supprimer la paire $(h, f)$				
 			\ENDFOR
 		\ENDFOR
 	\ENDIF
-\UNTIL{ce que chaque $liste_{pref}(m)$ soit vide ou que tout le monde soit engagé}
+\UNTIL{ce que chaque $liste_{pref}(h)$ soit vide ou que tout le monde soit engagé}
 \IF {tout le monde est engagé}
 	\STATE les engagements forment un couplage fortement stable 
 \ELSE
@@ -303,9 +295,32 @@ résolution va dépendre de plusieurs facteurs, soit du type de donné (si
 la gestion des indifférence doit être prise en considération), soit du
 choix de l'utilisateur. Si l'utilisateur décide d'utiliser une stratégie
 qui n'est pas optimal pour le type de donné choisie, le programme va lui
-indiquer le meilleur algorithme pour la résolution du problème. Chaque
-stratégie a une implémentation différente, il y en a 3, une pour
-l'algorithme basique de Gale-Shapley, la seconde est celle du "WEAKLY" et la derniere, l'algorithme "STRONG".
+indiquer. Chaque stratégie a une implémentation différente, il y en a 3, une pour
+l'algorithme basique de Gale-Shapley, la seconde est celle du "WEAKLY" et la dernière, l'algorithme "STRONG". Nous allons donc diviser cette section en 3 parties.
+\subsection{Les Structures de données}
+Le projet se compose de plusieurs fichier: 
+
+\begin{list}{•}{}
+\item \emph{StableStategie.java}, une interface.
+\item \emph{LireFichier.java}, une classe qui permet de lire un fichier texte contenant les preferences et de les affecter dans les $Maps$ correspondante.
+\item \emph{BasicStable.java}, la classe qui implémente l'algorithme basique.
+\item \emph{WeaklyStable.java}, la classe qui implémente l'algorithme $weakly$.
+\item \emph{StrongStable.java}, la classe qui implémente l'algorithme $strong$.
+\item \emph{Instance.java}, une classe qui permet de créer une instance en fonction de la stratégie, des deux $Maps A$ et $B$ (des préférences) ainsi que des listes des personnes participants au couplage.
+\item \emph{Main.java}, la classe principal qui exécute le programme.
+\item \emph{Convertable.java}, une petite interface qui permet de convertir une $Map$ de différente manière, selon la stratégie utilisé.
+
+\end{list}
+
+
+
+
+
+\subsection{Implémentation basique}
+
+
+
+
 
 \section{Installation}
 
