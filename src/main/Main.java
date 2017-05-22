@@ -41,13 +41,13 @@ public class Main {
 	    switch(numJDD){
 	    	case 1 :  
 	    		if(choix instanceof BasicStable){
-	    			JDD_A = new LireFichier("./JeuDeDonnees/affBasicA.txt", choix);
-	    			JDD_B = new LireFichier("./JeuDeDonnees/affBasicB.txt", choix);
+	    			JDD_A = new LireFichier("./src//main/affBasicA.txt", choix);
+	    			JDD_B = new LireFichier("./src//main/affBasicB.txt", choix);
 	    			
 	    		}
 	    		else{
-	    			JDD_A = new LireFichier("./JeuDeDonnees/AffectationAvecIndifference_A.txt", choix);
-	    			JDD_B = new LireFichier("./JeuDeDonnees/AffectationAvecIndifference_B.txt", choix);
+	    			JDD_A = new LireFichier("./src//main/AffectationAvecIndifference_A.txt", choix);
+	    			JDD_B = new LireFichier("./src//main/AffectationAvecIndifference_B.txt", choix);
 	    		}
 	    		break;
 	    	case 2 : 

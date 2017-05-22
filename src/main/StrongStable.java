@@ -11,10 +11,8 @@ import java.util.Map.Entry;
 import java.util.Queue;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
-import sun.net.ftp.FtpClient.TransferType;
 
 
 public class StrongStable implements StableStrategie{
@@ -73,9 +71,6 @@ public class StrongStable implements StableStrategie{
 				}
 			}
 		}
-		//		Queue<String> queue = new ArrayDeque<>();
-		//		HashSet<String> marque_A = new HashSet<>();
-
 
 		Multimap<String,String> coupleEngageInverse = invKey_Values(coupleEngage); // Map (u -> v)	
 		Map<String, String> tmpCouplage = new HashMap<String, String>(); // Couplage temporaire
@@ -164,9 +159,21 @@ public class StrongStable implements StableStrategie{
 		testabis.put("7", "R");
 
 
-
-		BFS(testb, testa, testabis, listeDes_Abs, libreu, librev);
-		//		}
+		if (!BFS(testb, testa, testabis, listeDes_Abs, libreu, librev).isEmpty()){
+			for (List<String> list : BFS(testb, testa, testabis, listeDes_Abs, libreu, librev)){
+				
+				for(int i = 0 ; i < list.size(); i=i+2){
+					testb.put(list.get(i), list.get(i+1));
+					if(!testb.containsKey(list.get(i)))
+						testb.remove(testb.containsValue(list.get(i+1)));
+				}
+			}
+		}
+		System.out.println("TMP COUPLAGE FINAL "+testb);
+				
+				
+				
+				//		}
 		//		while(tmpListeDes_A1.isEmpty() || (tmpListeDes_A1.isEmpty() && tmpListeDes_B1.isEmpty()));
 		//		
 
@@ -174,19 +181,19 @@ public class StrongStable implements StableStrategie{
 		return null;
 	}
 
-	public static void BFS(Map<String, String> couplage, Multimap<String,String> mapA, Multimap<String,String> mapB, List<String> listeDes_A, List<String> lesNeudsLibres, List<String> end) {
+	public static List<List<String>> BFS(Map<String, String> couplage, Multimap<String,String> mapA, Multimap<String,String> mapB, List<String> listeDes_A, List<String> lesNoeudsLibres, List<String> end) {
 		Queue<String> queue = new ArrayDeque<>();
-		//	    Queue<String> arbre = new ArrayDeque<>();
 		HashSet<String> seen = new HashSet<>();
-		List<String> cheminAugmentant = new ArrayList<String>();
+//		List<String> cheminAugmentant = new ArrayList<String>();
 		List<List<String>> toutsLesCheminsAugmentants = new ArrayList<List<String>>();
 		Multimap<String,String> coupleEngageInverseTMP = HashMultimap.create(); // la map u-> v pour le DFS
 		Map<String, String> tmpCouplageTMP = new HashMap<String, String>(); // Couplage temporaire, map v -> u pour le DFS
-		for(String s : lesNeudsLibres)//	Ajouter tout les noeuds u libre dans la file
+		Map<String, Boolean> visible = new HashMap<String, Boolean>();
+		for(String s : lesNoeudsLibres)//	Ajouter tout les noeuds u libre dans la file
 			queue.add(s); 
-		//	    arbre.add(start);
 		while(0 != queue.size()){
 			String noeudRecherche = queue.poll();
+			
 			if(listeDes_A.contains(noeudRecherche)){ // Si vertex appartient à u (aux hommes)
 
 				for(String ls : mapA.get(noeudRecherche)){
@@ -207,12 +214,28 @@ public class StrongStable implements StableStrategie{
 				if(end.contains(noeudRecherche)){
 					System.out.println("map v-> u " +tmpCouplageTMP);
 					System.out.println("map u -> v " +coupleEngageInverseTMP);
-
+					for(String s : coupleEngageInverseTMP.asMap().keySet()){
+//						System.out.println("STRING : "+ s);
+						if(!visible.containsKey(s)){
+							visible.put(s, true);
+							for(String str : coupleEngageInverseTMP.get(s)){
+	//							System.out.println("VALEUR " + str);
+								visible.put(str, true);
+							}
+						}
+					}
+					
 					//TODO
-					for(String noeudLibre : lesNeudsLibres){// Si le vertex courant est dans la liste des v libres on s'arrete et on commence le dfs
-						DFS(tmpCouplageTMP, coupleEngageInverseTMP, cheminAugmentant, toutsLesCheminsAugmentants, noeudLibre, noeudRecherche);
-						System.out.println("val "+ toutsLesCheminsAugmentants);
-						System.out.println("DFS " +cheminAugmentant);
+					for(String noeudLibre : lesNoeudsLibres){// Si le vertex courant est dans la liste des v libres on s'arrete et on commence le dfs
+						List<String> cheminAugmentant = new ArrayList<String>();
+						System.out.println("visible debut "+ visible);
+						if(visible.get(noeudLibre) == true){
+							if(DFS(tmpCouplageTMP, coupleEngageInverseTMP, cheminAugmentant, toutsLesCheminsAugmentants, visible,  noeudLibre, noeudRecherche))
+								break;
+							System.out.println("visible fin "+ visible);
+							System.out.println("val "+ toutsLesCheminsAugmentants);
+							System.out.println("DFS " +cheminAugmentant);
+						}
 					}
 				}
 				for(String ls : mapB.get(noeudRecherche)){
@@ -231,6 +254,9 @@ public class StrongStable implements StableStrategie{
 		System.out.println("Queue " + queue);
 		System.out.println(coupleEngageInverseTMP);
 		System.out.println(tmpCouplageTMP);
+		System.out.println(toutsLesCheminsAugmentants);
+		
+		return toutsLesCheminsAugmentants;
 	}
 
 	public static void list2list(List<String> listA, List<String> listB){
@@ -239,26 +265,35 @@ public class StrongStable implements StableStrategie{
 	}
 
 
-	public static boolean DFS(Map<String, String> mapB, Multimap<String,String> mapA, List<String> cheminEnCours, List<List<String>> toutsLesChemins,  String start, String end) {
+	public static boolean DFS(Map<String, String> mapB, Multimap<String,String> mapA, List<String> cheminEnCours, List<List<String>> toutsLesChemins, Map<String, Boolean> visible,  String start, String end) {
+//		if(mapB.containsKey(start))
 		cheminEnCours.add(start);
 		if(start.contentEquals(end)){
 			System.out.println("Trouvé");
 			System.out.println(cheminEnCours);
 			toutsLesChemins.add(cheminEnCours);
-			// marquer comme "invisible" tous les noeuds dans chemin
+//			 marquer comme "invisible" tous les noeuds dans chemin
+			for(String s : cheminEnCours)
+				visible.put(s, false);
 			return true;
 		}
 		else{
 			if(mapA.containsKey(start))
 				for(String s : mapA.get(start))
-					if (DFS(mapB, mapA, cheminEnCours, toutsLesChemins, s, end)){
-						// marquer comme "invisible" dans mapA le sommet correspondant à s 
-						return true;
+					if(visible.get(s) == true){
+						if (DFS(mapB, mapA, cheminEnCours, toutsLesChemins, visible, s, end)){
+							// marquer comme "invisible" dans mapA le sommet correspondant à s 
+	//						visible.put(s, false);
+							return true;
+						}
 					}
+					else 
+						return false;
 
 			if(mapB.containsKey(start))
-				if (DFS(mapB, mapA, cheminEnCours, toutsLesChemins, mapB.get(start), end)){
+				if (DFS(mapB, mapA, cheminEnCours, toutsLesChemins, visible, mapB.get(start), end)){
 					// marquer comme "invisible" dans mapA le sommet correspondant à mapB.get(start)
+//					visible.put(mapB.get(start), false);
 					return true;
 				}
 

@@ -298,37 +298,36 @@ qui n'est pas optimal pour le type de donné choisie, le programme va lui
 indiquer. Chaque stratégie a une implémentation différente, il y en a 3, une pour
 l'algorithme basique de Gale-Shapley, la seconde est celle du "WEAKLY" et la dernière, l'algorithme "STRONG". Nous allons donc diviser cette section en 3 parties.
 \subsection{Les Structures de données}
-Le projet se compose de plusieurs fichier: 
+Le projet se compose de plusieurs fichiers: 
 
 \begin{list}{•}{}
 \item \emph{StableStategie.java}, une interface.
-\item \emph{LireFichier.java}, une classe qui permet de lire un fichier texte contenant les preferences et de les affecter dans les $Maps$ correspondante.
+\item \emph{LireFichier.java}, une classe qui permet de lire un fichier texte contenant les preferences et de les affecter dans les $Maps$ correspondantes.
 \item \emph{BasicStable.java}, la classe qui implémente l'algorithme basique.
 \item \emph{WeaklyStable.java}, la classe qui implémente l'algorithme $weakly$.
 \item \emph{StrongStable.java}, la classe qui implémente l'algorithme $strong$.
 \item \emph{Instance.java}, une classe qui permet de créer une instance en fonction de la stratégie, des deux $Maps A$ et $B$ (des préférences) ainsi que des listes des personnes participants au couplage.
 \item \emph{Main.java}, la classe principal qui exécute le programme.
 \item \emph{Convertable.java}, une petite interface qui permet de convertir une $Map$ de différente manière, selon la stratégie utilisé.
-
 \end{list}
 
-
+Dans l'ordre des choses, l'interface \emph{StableStategie} contient la méthode pour trouver un couplage, selon la stratégie utilisé, l’implémentation est différente, c'est pour cela que l'on a besoin d'une classe qui va créer cette instance avec les différents paramètres requis. La classe \emph{Instance} va donc créer un instance en lui précisant la stratégie ainsi que les maps des deux groupes à coupler puis de leur nom. Pour ce qui est des paramètres des personnes, c'est la classe \emph{LireFichier} qui s'en charge. Le constructeur prend en paramètre le fichier texte correspondant au préférence d'un groupe de personne, ainsi que la strategie requise. La lecture du fichier texte va affecter dans une $Map$ les personnes ainsi que chacune de leurs préférences. Chaque case de la map sera donc de type $A \rightarrow [B, C, D, ...]$ pour le cas de la stratégie basique, pour celle qui admet les indifférences la map sera de type $A \rightarrow [[B], [C], [D], ...]$ avec la possibilité d'avoir à une position donnée, plusieurs personnes. L'utilisation d'une map Java me semble être la manière la plus évidente pour traiter ce genre de sujet, chaque clé représente une personne, et chaque valeur représente les préférences, l’accès aux données est simplifié. Une fois avoir créer cette instance, l’exécution de la stratégie se fait par la méthode \emph{executeStableStrategie()} qui va dépendre de la stratégie utilisé. C'est une bonne manière de déléguer le travail afin d'avoir une bonne cohésion du code et une bonne lisibilité, ce qui permet de deboger facilement si jamais quelque chose ne s'est pas bien déroulé. Pour la classe Main, c'est ici que se déroule le programme. en lançant l'application, l'utilisateur sera guidé tout au long de l'avancement du programme, il pourra faire des choix qui lui amèneront à tel ou tel résultat. L'utilisateur aura la possibilité de mesurer la qualité de son résultat, ainsi de savoir si le résultat obtenu est satisfaisant ou pas. L'utilisateur pourra lancer le programme X fois afin d'avoir une moyenne, ou de comparer un résultat à un autre et de ne garder que le meilleur. 
 
 
 
 \subsection{Implémentation basique}
-
-
+\subsection{Implémentation Weakly}
+\subsection{Implémentation Strong}
 
 
 
 \section{Installation}
 
-\section{Results}\label{results}
-In this section we describe the resul
+Très simple, une fois le .jar téléchargé, dans un terminal :\\
+java -jar nomDuJAR.jar
 
-\section{Conclusions}\label{conclusions}
-We worked hard, and achieved very little.
+\section{Conclusion}\label{conclusions}
+Ce projet informatique a été enrichissant, j'ai pu approfondir mes connaissances en matière de programmation, j'ai appris a utilisé Github afin de rendre ce projet accessible a mes tuteurs et aux autre utilisateurs, et d’être dans une optique un peu plus professionnelle du travail. Ce sujet est très intéressant car il est utile dans la vie courante, je suis content d'avoir pu participer a l'élaboration de ce projet. Je voudrai remercier mes tuteurs Petru Valicov et Kolja Knauer pour toute l'aide qu'ils ont pu m'apporter, tout les conseils et tout les échange par mail, qui m'ont grandement aider pour ce projet.
 
 \bibliographystyle{abbrv}
 \bibliography{main}
